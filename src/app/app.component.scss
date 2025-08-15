@@ -1,0 +1,29 @@
+nav {
+  background: #004d40;
+  padding: 1rem;
+  ul {
+    list-style: none;
+    display: flex;
+    gap: 1rem;
+    li {
+      a {
+        color: white;
+        text-decoration: none;
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+}
+
+main {
+  padding: 2rem;
+}
+
+footer {
+  text-align: center;
+  padding: 1rem;
+  background: #00251a;
+  color: #ccc;
+}

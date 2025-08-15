@@ -1,0 +1,81 @@
+<!-- Topbar -->
+<div class="bg-gray-900 text-white text-sm">
+  <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between px-4 py-2">
+    
+    <!-- Contacto -->
+    <div class="flex flex-wrap items-center gap-4">
+      <span class="flex items-center gap-2">
+        <fa-icon [icon]="faPhone"></fa-icon>
+        <a href="tel:+5492942655415" class="hover:underline">2942 65-5415</a>
+      </span>
+
+      <span class="flex items-center gap-2">
+        <fa-icon [icon]="faWhatsapp"></fa-icon>
+        <a href="https://wa.me/5492942638089" target="_blank" class="hover:underline">WhatsApp</a>
+      </span>
+
+      <span class="flex items-center gap-2">
+        <fa-icon [icon]="faMapMarkerAlt"></fa-icon>
+        <span>La Rioja 44, Chos Malal - Neuquén</span>
+      </span>
+
+      <span class="flex items-center gap-2">
+        <fa-icon [icon]="faEnvelope"></fa-icon>
+        <a href="mailto:ZMpropiedades&#64;outlook.com.ar" class="hover:underline">ZMpropiedades&#64;outlook.com.ar</a>
+      </span>
+    </div>
+  </div>
+</div>
+
+
+<!-- HEADER -->
+<header class="bg-[#545353] text-white shadow-md">
+  <div class="container mx-auto flex flex-wrap items-center justify-between p-4">
+    <a routerLink="/" class="flex items-center space-x-3">
+      <img src="assets/images/LOGO ZM.png" alt="Logo Martillero" 
+          class="w-16 h-16 object-cover" />
+      <span class="text-xl font-bold">Torres - Sifuentes</span>
+    </a>
+
+    <!-- Menú Desktop -->
+    <nav class="hidden md:flex space-x-6 font-medium bg-[#545353]">
+      <a routerLink="/" routerLinkActive="text-[#E0A96D]" class="hover:text-[#E0A96D] transition">Inicio</a>
+      <a routerLink="/servicios" routerLinkActive="text-[#E0A96D]" class="hover:text-[#E0A96D] transition">Servicios</a>
+      <a routerLink="/propiedades" routerLinkActive="text-[#E0A96D]" class="hover:text-[#E0A96D] transition">Propiedades</a>
+      <a routerLink="/galeria" routerLinkActive="text-[#E0A96D]" class="hover:text-[#E0A96D] transition">Galería</a>
+      <a routerLink="/contacto" routerLinkActive="text-[#E0A96D]" class="hover:text-[#E0A96D] transition">Contacto</a>
+    </nav>
+
+    <!-- Menú móvil -->
+    <button class="md:hidden focus:outline-none" (click)="toggleMenu()">
+      <svg class="w-8 h-8 text-[#E0A96D]" fill="none" stroke="currentColor" stroke-width="2"
+           viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="3" y1="6" x2="21" y2="6" />
+        <line x1="3" y1="12" x2="21" y2="12" />
+        <line x1="3" y1="18" x2="21" y2="18" />
+      </svg>
+    </button>
+  </div>
+
+  <!-- Menú móvil desplegable -->
+  <nav *ngIf="mobileMenuOpen" class="bg-[#2B4C7E] md:hidden">
+    <a routerLink="/" class="block px-4 py-2 hover:bg-[#E0A96D] hover:text-[#2B4C7E]">Inicio</a>
+    <a routerLink="/servicios" class="block px-4 py-2 hover:bg-[#E0A96D] hover:text-[#2B4C7E]">Servicios</a>
+    <a routerLink="/propiedades" class="block px-4 py-2 hover:bg-[#E0A96D] hover:text-[#2B4C7E]">Propiedades</a>
+    <a routerLink="/galeria" class="block px-4 py-2 hover:bg-[#E0A96D] hover:text-[#2B4C7E]">Galería</a>
+    <a routerLink="/contacto" class="block px-4 py-2 hover:bg-[#E0A96D] hover:text-[#2B4C7E]">Contacto</a>
+  </nav>
+</header>
+
+<!-- CONTENIDO DE LAS PÁGINAS -->
+<main class="min-h-screen">
+  <router-outlet></router-outlet>
+</main>
+
+<!-- FOOTER -->
+<footer class="bg-[#2B4C7E] text-white py-6 mt-10">
+  <div class="container mx-auto text-center text-sm">
+    <p>© 2025 Martillero Público - Chos Malal, Neuquén</p>
+    <p class="mt-1">Sitio desarrollado por Milton Budnik</p>
+  </div>
+</footer>

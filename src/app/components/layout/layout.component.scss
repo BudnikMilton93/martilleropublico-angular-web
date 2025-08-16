@@ -1,0 +1,22 @@
+header .logo {
+  width: 4.5rem; 
+  height: 4rem;
+}
+
+header.scrolled .logo {
+  width: 2.0rem; /* más pequeño, pero visible */
+  height: 2.0rem;
+}
+
+header .title {
+  font-size: 0.875rem; /* tamaño normal */
+}
+
+header.scrolled .title {
+  font-size: 0.875rem; /* reduce un poco al hacer scroll */
+}
+
+header.scrolled div {
+  padding-top: 0.25rem; /* más natural */
+  padding-bottom: 0.25rem;
+}

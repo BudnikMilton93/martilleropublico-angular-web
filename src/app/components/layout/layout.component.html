@@ -2,7 +2,6 @@
 <div class="bg-[#2f2e2e] text-white shadow-md px-4 py-2">
   <div class="container mx-auto flex flex-col md:flex-row items-center md:justify-start gap-4 md:gap-8 text-sm">
     
-    <!-- Contacto -->
     <div class="flex flex-wrap items-center gap-4">
       <span class="flex items-center gap-2">
         <fa-icon [icon]="faWhatsapp"></fa-icon>
@@ -27,17 +26,17 @@
   <div class="container mx-auto flex flex-wrap items-center justify-between p-2 transition-all duration-300 ease-in-out">
     <a routerLink="/" class="flex items-center space-x-3">
       <img src="assets/images/home/LOGO ZM.png" alt="Logo Martillero" 
-     class="w-13 h-12 object-cover" />
-<span class="text-lg font-bold">Martilleros y Corredores Públicos</span>
+      class="w-13 h-12 object-cover" />
+      <span class="text-lg font-bold">Martilleros y Corredores Públicos</span>
     </a>
 
     <!-- Menú Desktop -->
     <nav class="hidden md:flex space-x-6 font-medium bg-[#545353]">
-      <a routerLink="/" routerLinkActive="text-[#E0A96D]" class="hover:text-[#E0A96D] transition">Inicio</a>
-      <a routerLink="/servicios" routerLinkActive="text-[#E0A96D]" class="hover:text-[#E0A96D] transition">Servicios</a>
-      <a routerLink="/propiedades" routerLinkActive="text-[#E0A96D]" class="hover:text-[#E0A96D] transition">Propiedades</a>
-      <a routerLink="/galeria" routerLinkActive="text-[#E0A96D]" class="hover:text-[#E0A96D] transition">Galería</a>
-      <a routerLink="/contacto" routerLinkActive="text-[#E0A96D]" class="hover:text-[#E0A96D] transition">Contacto</a>
+      <a routerLink="/" routerLinkActive="text-[#E0A96D]" [routerLinkActiveOptions]="{ exact: true }" class="hover:text-[#E0A96D] transition"> Inicio</a>
+      <a routerLink="/servicios" routerLinkActive="text-[#E0A96D]" [routerLinkActiveOptions]="{ exact: true }" class="hover:text-[#E0A96D] transition">Servicios</a>
+      <a routerLink="/propiedades" routerLinkActive="text-[#E0A96D]" [routerLinkActiveOptions]="{ exact: true }" class="hover:text-[#E0A96D] transition">Propiedades</a>
+      <a routerLink="/galeria" routerLinkActive="text-[#E0A96D]" [routerLinkActiveOptions]="{ exact: true }" class="hover:text-[#E0A96D] transition">Galería</a>
+      <a routerLink="/contacto" routerLinkActive="text-[#E0A96D]" [routerLinkActiveOptions]="{ exact: true }" class="hover:text-[#E0A96D] transition">Contacto</a>
     </nav>
 
     <!-- Menú móvil -->

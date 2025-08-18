@@ -1,21 +1,24 @@
-<section class="bg-[#e0e2e6]">
+<section  id="home-section"
+class= "bg-[#e0e2e6] relative pt-[4rem] opacity-0 transform -translate-x-10 transition-all duration-700 bg-cover bg-center">
   <!-- HERO -->
   <div class="max-w-7xl mx-auto px-4 py-16 flex flex-col md:flex-row items-center gap-10">
     <div class="md:w-1/2 space-y-6 text-center md:text-left">
+      
       <h1 class="text-4xl font-bold text-[#545353]">Z & M Propiedades</h1>
+      
       <p class="text-[#555555] leading-relaxed">
         Soluciones profesionales para alquileres, administración, ventas, tasaciones urbanas y rurales.
         Servicio integral con transparencia y experiencia.
       </p>
-      <a routerLink="/servicios"
-        class="inline-flex items-center px-5 py-3 bg-[#545353] text-white rounded-md shadow hover:bg-[#333232] transition">
+
+      <button (click)="NavegarAServicios()"
+        class="inline-flex items-center px-5 py-3 bg-[#545353] text-white rounded-md shadow hover:bg-[#333232] transition-all duration-300 group">
         Conocer Servicios
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-          class="w-5 h-5 ml-2">
-          <path stroke-linecap="round" stroke-linejoin="round"
-            d="M17.25 8.25L21 12l-3.75 3.75m-11.25-7.5L3 12l3.75 3.75" />
+          class="w-5 h-5 ml-2 transform transition-transform duration-300 group-hover:translate-x-2 group-hover:rotate-12">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25L21 12l-3.75 3.75m-11.25-7.5L3 12l3.75 3.75" />
         </svg>
-      </a>
+      </button>
     </div>
 
     <!-- IMÁGENES -->
@@ -28,49 +31,53 @@
 </section>
 
 <!-- MÉTRICAS -->
-<section class="bg-white py-12">
-  <div class="max-w-7xl mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-    <div>
-      <p class="text-3xl font-bold text-[#545353]">120+</p>
-      <p class="text-sm text-gray-600">Ventas Concretadas</p>
-    </div>
-    <div>
-      <p class="text-3xl font-bold text-[#545353]">80+</p>
-      <p class="text-sm text-gray-600">Tasaciones</p>
-    </div>
-    <div>
-      <p class="text-3xl font-bold text-[#545353]">150+</p>
-      <p class="text-sm text-gray-600">Alquileres</p>
-    </div>
-    <div>
-      <p class="text-3xl font-bold text-[#545353]">10</p>
-      <p class="text-sm text-gray-600">Localidades</p>
+<section id="servicios-section" class="py-12 bg-gray-50">
+  <div class="container mx-auto px-4">
+    <h2 class="text-2xl font-bold text-[#545353] mb-8 text-center">
+      Nuestras Métricas
+    </h2>
+
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+      <div *ngFor="let metric of metricsData"
+           #metric
+           [attr.data-value]="metric.value"
+           class="bg-white rounded-2xl shadow-md p-6 flex flex-col items-center">
+        
+        <p class="text-3xl md:text-4xl font-extrabold text-gray-700 mb-2">
+          0+
+        </p>
+
+        <span class="text-gray-700 font-medium">
+          {{ metric.label }}
+        </span>
+      </div>
     </div>
   </div>
 </section>
-
 
 <!-- PROPIEDADES DESTACADAS -->
 <section class="bg-[#e0e2e6] py-16">
   <div class="max-w-7xl mx-auto px-4">
     <h2 class="text-2xl font-bold text-[#545353] mb-8 text-center">Propiedades Destacadas</h2>
     <div class="grid gap-8 md:grid-cols-3">
-      <div class="bg-white rounded-lg shadow-md overflow-hidden">
-        <img src="assets/images/prop1.jpg" alt="Propiedad 1" class="w-full h-48 object-cover">
+      <div class="bg-white rounded-lg shadow-md overflow-hidden transform hover:scale-105 transition">
+        <img src="assets/images/prop1.jpg" alt="Propiedad 1" loading="lazy" class="w-full h-48 object-cover">
         <div class="p-4">
           <h3 class="text-lg font-semibold text-[#545353]">Casa en el Centro</h3>
           <p class="text-sm text-gray-600">3 habitaciones · 2 baños · Cochera</p>
         </div>
       </div>
-      <div class="bg-white rounded-lg shadow-md overflow-hidden">
-        <img src="assets/images/prop2.jpg" alt="Propiedad 2" class="w-full h-48 object-cover">
+
+      <div class="bg-white rounded-lg shadow-md overflow-hidden transform hover:scale-105 transition">
+        <img src="assets/images/prop2.jpg" alt="Propiedad 2" loading="lazy" class="w-full h-48 object-cover">
         <div class="p-4">
           <h3 class="text-lg font-semibold text-[#545353]">Departamento con Vista</h3>
           <p class="text-sm text-gray-600">2 habitaciones · 1 baño · Balcón</p>
         </div>
       </div>
-      <div class="bg-white rounded-lg shadow-md overflow-hidden">
-        <img src="assets/images/prop3.jpg" alt="Propiedad 3" class="w-full h-48 object-cover">
+      
+      <div class="bg-white rounded-lg shadow-md overflow-hidden transform hover:scale-105 transition">
+        <img src="assets/images/prop3.jpg" alt="Propiedad 3" loading="lazy" class="w-full h-48 object-cover">
         <div class="p-4">
           <h3 class="text-lg font-semibold text-[#545353]">Lote en Zona Norte</h3>
           <p class="text-sm text-gray-600">500 m² · Listo para construir</p>
@@ -80,13 +87,17 @@
   </div>
 </section>
 
-
 <!-- CTA FINAL -->
 <section class="bg-[#545353] text-white py-12 text-center">
   <h2 class="text-2xl font-bold mb-4">¿Listo para encontrar tu propiedad ideal?</h2>
   <p class="mb-6">Contáctanos hoy mismo y te ayudamos a hacer realidad tu proyecto.</p>
-  <a routerLink="/contacto"
-     class="px-6 py-3 bg-white text-[#545353] font-semibold rounded shadow hover:bg-gray-200 transition">
-    Contactar
-  </a>
+  
+  <!-- Botón de WhatsApp -->
+  <div class="mt-8 text-center">
+    <a href="https://wa.me/5491123456789" target="_blank" rel="noopener" class="inline-flex items-center gap-2 bg-green-500 text-white px-6 py-3 rounded-lg 
+                      hover:bg-green-600 transition duration-300 shadow-md">
+      <fa-icon [icon]="['fab', 'whatsapp']" class="text-2xl"></fa-icon>
+      <span class="font-semibold">Contactarnos</span>
+    </a>
+  </div>
 </section>

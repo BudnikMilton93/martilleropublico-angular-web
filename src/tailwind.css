@@ -1,3 +1,19 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+/* 
+  Utilidad personalizada para animación fade-in lateral.
+  Se utiliza en conjunto con la función animateOnScroll().
+  - Restaura opacidad (de 0 a 1).
+  - Quita el desplazamiento horizontal (translate-x).
+  - Se marca con !important para asegurar que sobrescriba
+    las clases iniciales de estado oculto.
+*/
+@layer utilities {
+  .animate-fade-in {
+    opacity: 1 !important;
+    transform: translateX(0) !important;
+  }
+}

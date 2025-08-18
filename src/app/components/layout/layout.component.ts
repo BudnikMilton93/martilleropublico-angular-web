@@ -18,18 +18,16 @@ export class LayoutComponent {
   faWhatsapp = faWhatsapp;
   faMapMarkerAlt = faMapMarkerAlt;
   faEnvelope = faEnvelope;
+  mobileMenuOpen = false;
+  isScrolled = false;
 
   constructor(library: FaIconLibrary) {
     library.addIcons(faPhone, faWhatsapp, faMapMarkerAlt, faEnvelope);
   }
 
-  mobileMenuOpen = false;
-
   toggleMenu() {
     this.mobileMenuOpen = !this.mobileMenuOpen;
   }
-
-  isScrolled = false;
 
   @HostListener('window:scroll', [])
   onWindowScroll() {

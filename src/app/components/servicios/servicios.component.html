@@ -1,1 +1,64 @@
-<p>servicios works!</p>
+<section id="servicios-section"
+    class="relative pt-[4rem] opacity-0 transform -translate-x-10 transition-all duration-700 bg-cover bg-center"
+    style="background-image: url('/assets/images/servicios/fondo-servicios.jpg');">
+
+    <!-- Overlay -->
+    <div class="absolute inset-0 bg-gray-600/50"></div>
+
+    <!-- Contenido -->
+    <div class="relative container mx-auto px-4 py-12">
+
+        <h2 class="text-3xl md:text-4xl font-bold mb-12 text-center text-white">Nuestros Servicios</h2>
+
+        <!-- Grid de servicios -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div *ngFor="let servicio of servicios"
+                class="bg-white/70  border border-gray-200 rounded-2xl card-custom p-6 flex flex-col items-center 
+                       text-center transform transition duration-300 hover:scale-105 hover:shadow-xl">
+
+                <!-- Icono Font Awesome -->
+                <fa-icon [icon]="servicio.icon" class="text-4xl mb-4 text-[#545353]"></fa-icon>
+
+                <h3 class="text-xl font-semibold mb-2">{{ servicio.title }}</h3>
+                <p class="text-gray-700">{{ servicio.description }}</p>
+            </div>
+        </div>
+
+        <div class="text-center my-16">
+            <h3 class="text-3xl md:text-4xl font-bold mb-8 text-white">
+                ¿Por qué elegirnos?
+            </h3>
+        
+            <ul class="space-y-4 max-w-2xl mx-auto text-center">
+                <li class="flex flex-col items-center gap-2">
+                    <fa-icon [icon]="['fas', 'check-circle']"
+                        class="text-white text-2xl border-2 border-white rounded-full p-1"></fa-icon>
+                    <span class="text-black text-lg text-center">Más de 10 años de experiencia en el rubro</span>
+                </li>
+            
+                <li class="flex flex-col items-center gap-2">
+                    <fa-icon [icon]="['fas', 'user']"
+                        class="text-white text-2xl border-2 border-white rounded-full p-1"></fa-icon>
+                    <span class="text-black text-lg text-center">Equipo profesional y dedicado</span>
+                </li>
+            
+                <li class="flex flex-col items-center gap-2">
+                    <fa-icon [icon]="['fas', 'award']"
+                        class="text-white text-2xl border-2 border-white rounded-full p-1"></fa-icon>
+                    <span class="text-black text-lg text-center">Resultados garantizados</span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Botón de WhatsApp -->
+        <div class="mt-8 text-center">
+            <p class="mb-3 text-lg font-medium text-black">¿Querés más información sobre nuestros servicios?</p>
+            <a href="https://wa.me/5491123456789" target="_blank" rel="noopener"
+                class="inline-flex items-center gap-2 bg-green-500 text-white px-6 py-3 rounded-lg 
+                    hover:bg-green-600 transition duration-300 shadow-md">
+                <fa-icon [icon]="['fab', 'whatsapp']" class="text-2xl"></fa-icon>
+                <span class="font-semibold">Contactarnos</span>
+            </a>
+        </div>
+    </div>
+</section>                

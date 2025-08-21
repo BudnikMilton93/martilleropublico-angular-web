@@ -14,23 +14,30 @@ import { faPhone, faMapMarkerAlt, faEnvelope } from '@fortawesome/free-solid-svg
 })
 export class LayoutComponent {
 
+  constructor(library: FaIconLibrary) {
+    library.addIcons(faPhone, faWhatsapp, faMapMarkerAlt, faEnvelope);
+  }
+
+  //#region Variables
   faPhone = faPhone;
   faWhatsapp = faWhatsapp;
   faMapMarkerAlt = faMapMarkerAlt;
   faEnvelope = faEnvelope;
   mobileMenuOpen = false;
   isScrolled = false;
+  //#endregion
 
-  constructor(library: FaIconLibrary) {
-    library.addIcons(faPhone, faWhatsapp, faMapMarkerAlt, faEnvelope);
-  }
-
+  //#region Decoradores
+  @HostListener('window:scroll', [])
+    onWindowScroll() {
+      this.isScrolled = window.scrollY > 50; // cuando bajes 50px, achica
+    }
+  //#endregion
+    
+  //#region Procedimientos
   toggleMenu() {
     this.mobileMenuOpen = !this.mobileMenuOpen;
   }
+  //#endregion
 
-  @HostListener('window:scroll', [])
-  onWindowScroll() {
-    this.isScrolled = window.scrollY > 50; // cuando bajes 50px, achica
-  }
 }

@@ -1,0 +1,25 @@
+<div class="mt-6 bg-white rounded-2xl shadow-lg p-4 flex flex-col cursor-pointer hover:shadow-2xl transition"
+     (click)="openDetail()">
+
+  <!-- Imagen principal con efecto hover -->
+  <div class="overflow-hidden rounded-lg mb-3">
+    <img *ngIf="imagenPrincipal"
+     [src]="imagenPrincipal"
+     alt="{{ data?.titulo }}"
+     class="w-full h-40 object-cover transition-transform duration-500 ease-in-out transform hover:scale-105" />
+  </div>
+
+  <h3 class="text-lg font-bold text-gray-800">{{ data.titulo }}</h3>
+  <p *ngIf="data.subtitulo" class="text-sm text-gray-500">{{ data.subtitulo }}</p>
+
+  <p *ngIf="data.price" class="text-md font-semibold text-green-600 mt-2">
+    {{ data.price }}
+  </p>
+
+  <div *ngIf="data.tags?.length" class="flex gap-2 flex-wrap mt-2">
+    <span *ngFor="let tag of data.tags"
+          class="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded-lg">
+      {{ tag }}
+    </span>
+  </div>
+</div>

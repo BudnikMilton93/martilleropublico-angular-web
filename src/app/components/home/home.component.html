@@ -31,9 +31,13 @@ class= "bg-[#e0e2e6] relative pt-[4rem] opacity-0 transform -translate-x-10 tran
 </section>
 
 <!-- MÉTRICAS -->
-<section id="servicios-section" class="py-12 bg-gray-50">
-  <div class="container mx-auto px-4">
-    <h2 class="text-2xl font-bold text-[#545353] mb-8 text-center">
+<section class="py-12 relative bg-[#9d9fa4] bg-center">
+  
+  <!-- Overlay oscuro/blanco translúcido encima del fondo -->
+  <div class="absolute inset-0 bg-white/70"></div>
+
+  <div class="relative container mx-auto px-4">
+    <h2 class="text-3xl font-bold text-[#545353] mb-8 text-center">
       Nuestras Métricas
     </h2>
 
@@ -41,7 +45,7 @@ class= "bg-[#e0e2e6] relative pt-[4rem] opacity-0 transform -translate-x-10 tran
       <div *ngFor="let metric of metricsData"
            #metric
            [attr.data-value]="metric.value"
-           class="bg-white rounded-2xl shadow-md p-6 flex flex-col items-center">
+           class="bg-[#ffffff]  rounded-2xl shadow-2xl shadow-black/40 p-6 flex flex-col items-center transform hover:scale-105 transition">
         
         <p class="text-3xl md:text-4xl font-extrabold text-gray-700 mb-2">
           0+
@@ -58,29 +62,17 @@ class= "bg-[#e0e2e6] relative pt-[4rem] opacity-0 transform -translate-x-10 tran
 <!-- PROPIEDADES DESTACADAS -->
 <section class="bg-[#e0e2e6] py-16">
   <div class="max-w-7xl mx-auto px-4">
-    <h2 class="text-2xl font-bold text-[#545353] mb-8 text-center">Propiedades Destacadas</h2>
+    <h2 class="text-3xl font-bold text-[#545353] mb-8 text-center">Propiedades Destacadas</h2>
     <div class="grid gap-8 md:grid-cols-3">
-      <div class="bg-white rounded-lg shadow-md overflow-hidden transform hover:scale-105 transition">
-        <img src="assets/images/prop1.jpg" alt="Propiedad 1" loading="lazy" class="w-full h-48 object-cover">
+      <div *ngFor="let propiedad of propiedadesDestacadas"
+        class="bg-white rounded-lg shadow-lg hover:shadow-2xl overflow-hidden transform hover:scale-105 transition duration-300">
+        <img [src]="propiedad.imagenes[0]" [alt]="propiedad.titulo" loading="lazy" class="w-full h-48 object-cover">
         <div class="p-4">
-          <h3 class="text-lg font-semibold text-[#545353]">Casa en el Centro</h3>
-          <p class="text-sm text-gray-600">3 habitaciones · 2 baños · Cochera</p>
-        </div>
-      </div>
-
-      <div class="bg-white rounded-lg shadow-md overflow-hidden transform hover:scale-105 transition">
-        <img src="assets/images/prop2.jpg" alt="Propiedad 2" loading="lazy" class="w-full h-48 object-cover">
-        <div class="p-4">
-          <h3 class="text-lg font-semibold text-[#545353]">Departamento con Vista</h3>
-          <p class="text-sm text-gray-600">2 habitaciones · 1 baño · Balcón</p>
-        </div>
-      </div>
-      
-      <div class="bg-white rounded-lg shadow-md overflow-hidden transform hover:scale-105 transition">
-        <img src="assets/images/prop3.jpg" alt="Propiedad 3" loading="lazy" class="w-full h-48 object-cover">
-        <div class="p-4">
-          <h3 class="text-lg font-semibold text-[#545353]">Lote en Zona Norte</h3>
-          <p class="text-sm text-gray-600">500 m² · Listo para construir</p>
+          <h3 class="text-lg font-semibold text-[#545353]">{{ propiedad.titulo }}</h3>
+          <p class="text-sm text-gray-600">
+            {{ propiedad.habitaciones }} habitaciones · {{ propiedad.sanitario || 'N/A' }} sanitario · {{ propiedad.area }}
+          </p>
+          <p class="mt-1 font-bold text-[#545353]">{{ propiedad.price }}</p>
         </div>
       </div>
     </div>

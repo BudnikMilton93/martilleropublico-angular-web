@@ -1,1 +1,38 @@
-<p>propiedades works!</p>
+<section id="propiedades-section"
+  class="bg-[#e0e2e6] relative pt-[4rem] opacity-0 transform -translate-x-10 transition-all duration-700 bg-cover bg-center">
+
+  <div class="relative container mx-auto px-4 py-12">
+
+    <div class="relative mb-12">
+      <!-- Título, SIEMPRE centrado en todo el contenedor -->
+      <h2 class="text-3xl md:text-4xl font-bold text-[#545353] text-center">
+        Nuestras Propiedades
+      </h2>
+    
+      <!-- Botón: centrado debajo en mobile; a la derecha en desktop sin empujar el título -->
+      <div class="mt-4 flex justify-center
+                  md:mt-0 md:block md:absolute md:right-0 md:top-1/2 md:-translate-y-1/2">
+        <button
+          class="flex flex-col items-center text-gray-600 transition-transform transform hover:scale-110 hover:text-[#3d3d3d] hover:drop-shadow-lg duration-300">
+      
+          <img src="assets/images/propiedades/calculadora2.png" alt="Calculadora"
+            class="w-16 h-16 md:w-14 md:h-14 transition-transform duration-300" />
+      
+          <span class="mt-2 text-base md:text-sm text-center font-bold">
+            Calculadora de indexación
+          </span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <app-tarjeta *ngFor="let propiedad of propiedades" [data]="propiedad" (detailRequested)="OpenModal($event)">
+      </app-tarjeta>
+    </div>
+  </div>
+</section>
+
+<app-tarjeta-detalles *ngIf="propiedadSeleccionada" [data]="propiedadSeleccionada"
+  (closeRequested)="propiedadSeleccionada = null">
+</app-tarjeta-detalles>

@@ -1,0 +1,82 @@
+<!-- Overlay -->
+<div class="fixed inset-0 bg-black/50 flex justify-center items-center z-50 p-4" *ngIf="data">
+
+  <!-- Contenedor modal -->
+  <div class="bg-white w-full max-w-3xl rounded-2xl shadow-2xl p-6 relative max-h-[90vh] overflow-y-auto">
+
+    <!-- Botón cerrar -->
+    <button (click)="Cerrar()"
+      class="absolute top-4 right-4 z-50 bg-gray-800 text-white rounded-full p-3 shadow-lg hover:bg-gray-700 transition">
+      <fa-icon [icon]="faXmark" class="text-xl"></fa-icon>
+    </button>
+
+    <!-- Carrusel de imágenes -->
+    <div *ngIf="data.imagenes?.length" class="mb-4 relative">
+      <img [src]="data.imagenes[currentImage]" alt="{{ data.titulo }}"
+        class="w-full h-64 object-cover rounded-lg transition-transform duration-500 ease-in-out transform hover:scale-105">
+
+      <button (click)="ImagenAnterior()"
+        class="absolute left-2 top-1/2 transform -translate-y-1/2 z-40 bg-white/70 p-2 rounded-full hover:bg-white/90 transition">
+        <fa-icon [icon]="faChevronLeft" class="text-gray-800"></fa-icon>
+      </button>
+
+      <button (click)="ImagenSiguiente()"
+        class="absolute right-2 top-1/2 transform -translate-y-1/2 z-40 bg-white/70 p-2 rounded-full hover:bg-white/90 transition">
+        <fa-icon [icon]="faChevronRight" class="text-gray-800"></fa-icon>
+      </button>
+    </div>
+
+    <!-- Título y subtítulo -->
+    <h2 class="text-2xl font-bold text-gray-800">{{ data.titulo }}</h2>
+    <p *ngIf="data.subtitulo" class="text-md text-gray-600">{{ data.subtitulo }}</p>
+
+    <!-- Descripción -->
+    <p *ngIf="data.descripcion" class="text-gray-700 mt-4">{{ data.descripcion }}</p>
+
+    <p *ngIf="data.ubicacion" class="text-gray-700 mt-4">
+      Se encuentra en: {{ data.ubicacion }}
+    </p>
+
+    <div class="flex items-center space-x-6 text-gray-700 mt-4">
+      <span *ngIf="data.habitaciones">
+        {{ data.habitaciones }} habitación(es)
+      </span>
+      <span *ngIf="data.sanitario">
+        {{ data.sanitario }} baño(s)
+      </span>
+    </div>
+
+    <div class="flex justify-center space-x-6 mt-6">
+      <!-- Google Maps -->
+      <a [href]="'https://www.google.com/maps/search/?api=1&query=' + data.ubicacion" target="_blank"
+        rel="noopener noreferrer"
+        class="flex items-center space-x-2 bg-blue-600 text-white px-4 py-2 rounded-full shadow hover:bg-blue-700 transition">
+        <fa-icon [icon]="faMapMarkerAlt"></fa-icon>
+        <span>Mapa</span>
+      </a>
+
+      <!-- WhatsApp -->
+      <a [href]="'https://wa.me/5491123456789?text= Hola! Estoy interesado en la propiedad ubicada en ' + data.ubicacion"
+        target="_blank" rel="noopener noreferrer"
+        class="flex items-center space-x-2 bg-green-600 text-white px-4 py-2 rounded-full shadow hover:bg-green-700 transition">
+        <fa-icon [icon]="faWhatsapp"></fa-icon>
+        <span>WhatsApp</span>
+      </a>
+    </div>
+
+    
+
+    <!-- Precio -->
+    <p *ngIf="data.price" class="text-xl font-semibold text-green-600 mt-4">
+      {{ data.price }}
+    </p>
+
+    <!-- Tags -->
+    <div *ngIf="data.tags?.length" class="flex gap-2 flex-wrap mt-4">
+      <span *ngFor="let tag of data.tags" class="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded-lg">
+        {{ tag }}
+      </span>
+    </div>
+
+  </div>
+</div>

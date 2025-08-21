@@ -1,9 +1,11 @@
-import { AfterViewInit, Component, NgZone, ElementRef, ViewChildren, QueryList, Inject, PLATFORM_ID  } from '@angular/core';
+import { AfterViewInit, Component, NgZone, ElementRef, ViewChildren, QueryList, Inject, PLATFORM_ID, OnInit  } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Router } from '@angular/router';
 import { animateOnScroll } from '../../shared/utils/animations';
 import { faWhatsapp } from '@fortawesome/free-brands-svg-icons';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import { IPropiedades } from '../propiedades/models/propiedades.models';
+import { PROPIEDADES_MOCK } from '../propiedades/mock/propiedades.mock';
 
 
 @Component({
@@ -14,14 +16,18 @@ import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontaweso
   styleUrls: ['./home.component.scss']
 })
 
-export class HomeComponent implements AfterViewInit  {
-  @ViewChildren('metric') metrics!: QueryList<ElementRef>;
+export class HomeComponent implements AfterViewInit, OnInit {
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object, private ngZone: NgZone, private router: Router, private el: ElementRef, library: FaIconLibrary) {
     // arrancamos el loop fuera de Angular
     this.ngZone.runOutsideAngular(() => this.EmpezarCarrusel());
     library.addIcons(faWhatsapp);
   }
+  
+
+  //#region Decoradores
+  @ViewChildren('metric') metrics!: QueryList<ElementRef>;
+  //#endregion
 
   //#region Eventos
   ngAfterViewInit(): void {
@@ -31,6 +37,15 @@ export class HomeComponent implements AfterViewInit  {
       this.EvitarSSR();
     } catch (error) {
       throw error;
+    }
+  }
+
+  ngOnInit(): void {
+    try {
+      // Tomamos las primeras 3 propiedades como destacadas
+    this.propiedadesDestacadas = PROPIEDADES_MOCK.slice(0, 3);
+    } catch (error) {
+      
     }
   }
   //#endregion
@@ -49,6 +64,7 @@ export class HomeComponent implements AfterViewInit  {
     { label: 'Localidades', value: 5 }
   ];
 
+  propiedadesDestacadas: IPropiedades[] = [];
   currentImageIndex = 0;
   fadeOut = false;
   //#endregion

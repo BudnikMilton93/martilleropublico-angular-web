@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ITarjetaData } from './tarjeta.model';
-import { IPropiedades } from '../../propiedades/models/propiedades.models';
+import { ITarjetaData } from '../../../models/tarjeta/tarjeta.model';
+import { IPropiedades } from '../../../models/propiedades/propiedades.models';
 
 @Component({
   selector: 'app-tarjeta',

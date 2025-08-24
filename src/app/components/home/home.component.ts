@@ -1,17 +1,20 @@
-import { AfterViewInit, Component, NgZone, ElementRef, ViewChildren, QueryList, Inject, PLATFORM_ID, OnInit  } from '@angular/core';
+import { AfterViewInit, Component, NgZone, ElementRef, ViewChildren, QueryList, Inject, PLATFORM_ID, OnInit, ViewChild, HostListener } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Router } from '@angular/router';
 import { animateOnScroll } from '../../shared/utils/animations';
 import { faWhatsapp } from '@fortawesome/free-brands-svg-icons';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
-import { IPropiedades } from '../propiedades/models/propiedades.models';
-import { PROPIEDADES_MOCK } from '../propiedades/mock/propiedades.mock';
+import { IPropiedades } from '../../models/propiedades/propiedades.models';
+import { PROPIEDADES_MOCK } from '../../mocks/propiedades/propiedades.mock';
+import { InformacionModalComponent } from '../informacion-modal/informacion-modal.component';
+import { CalculadoraComponent } from '../calculadora/calculadora.component';
+
 
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, FontAwesomeModule], 
+  imports: [CommonModule, FontAwesomeModule, InformacionModalComponent, CalculadoraComponent],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
@@ -23,10 +26,11 @@ export class HomeComponent implements AfterViewInit, OnInit {
     this.ngZone.runOutsideAngular(() => this.EmpezarCarrusel());
     library.addIcons(faWhatsapp);
   }
-  
 
   //#region Decoradores
-  @ViewChildren('metric') metrics!: QueryList<ElementRef>;
+  @ViewChildren('metrica') metricas!: QueryList<ElementRef>;
+  @ViewChild('contactSection') contactSection!: ElementRef<HTMLElement>;
+
   //#endregion
 
   //#region Eventos
@@ -43,9 +47,21 @@ export class HomeComponent implements AfterViewInit, OnInit {
   ngOnInit(): void {
     try {
       // Tomamos las primeras 3 propiedades como destacadas
-    this.propiedadesDestacadas = PROPIEDADES_MOCK.slice(0, 3);
+      this.propiedadesDestacadas = PROPIEDADES_MOCK.slice(0, 3);
     } catch (error) {
+      throw error;
+    }
+  }
+
+  OnMetricClick(metrica: { valor: number; titulo: string; icono: string; animacion: boolean; info: string[] }) {
+    
+    if (metrica.titulo === 'Calculadora de Indexación') {
+      this.AbrirCalculadora();
       
+    } else {
+      this.selectedMetricTitle = metrica.titulo;
+      this.selectedMetricInfo = metrica.info;
+      this.showInfoModal = true;
     }
   }
   //#endregion
@@ -57,18 +73,64 @@ export class HomeComponent implements AfterViewInit, OnInit {
     'assets/images/home/home2.jpg'
   ];
 
-  metricsData = [
-    { label: 'Propiedades Vendidas', value: 50 },
-    { label: 'Tasaciones', value: 30 },
-    { label: 'Alquileres', value: 25 },
-    { label: 'Localidades', value: 5 }
+  metricasData = [
+    {
+      valor: 50,
+      titulo: 'Ventas Concretadas',
+      icono: 'assets/images/home/casa.png',
+      animacion: true,
+      info: [
+        'Más de 50 operaciones cerradas con clientes satisfechos.',
+        'Procesos de compraventa ágiles y transparentes.',
+        'Acompañamiento integral durante toda la operación.',
+        'Red de contactos que facilita la concreción de negocios.'
+      ]
+    },
+    {
+      valor: 30,
+      titulo: 'Tasaciones',
+      icono: 'assets/images/home/tasacion.png',
+      animacion: true,
+      info: [
+        'Tasaciones profesionales y actualizadas al mercado.',
+        'Evaluaciones objetivas y confiables.',
+        'Informes claros para una mejor toma de decisiones.'
+      ]
+    },
+    {
+      valor: 5,
+      titulo: 'Localidades',
+      icono: 'assets/images/home/localidades.png',
+      animacion: true,
+      info: [
+        'Nuestros servicios llegan a las localidades de:',
+        'Huingan Có',
+        'Taquimilán',
+        'Las Ovejas',
+        'Andacollo'
+      ]
+    },
+    {
+      valor: 25,
+      titulo: 'Calculadora de Indexación',
+      icono: 'assets/images/home/calculadora.png',
+      animacion: false,
+      info: [] // no aplica
+    },
   ];
 
   propiedadesDestacadas: IPropiedades[] = [];
-  currentImageIndex = 0;
-  fadeOut = false;
-  //#endregion
+  selectedMetricInfo: string[] = [];
   
+  currentImageIndex = 0;
+  selectedMetricTitle = '';
+  
+  fadeOut = false;
+  showInfoModal = false;
+  showCalculadora = false;
+  mostrarBotonFlotante = true;
+  //#endregion
+
   //#region Procedimientos
   EmpezarCarrusel() {
     setTimeout(() => {
@@ -80,48 +142,49 @@ export class HomeComponent implements AfterViewInit, OnInit {
   }
 
   IncremenarValores() {
-  // Verifica que estamos en un navegador y que IntersectionObserver está disponible
-  if (typeof window !== 'undefined' && 'IntersectionObserver' in window) {
+    // Verificamos que estemos en un navegador (no en SSR) 
+    // y que la API IntersectionObserver esté disponible.
+    if (typeof window !== 'undefined' && 'IntersectionObserver' in window) {
 
-    // Crea un nuevo IntersectionObserver para detectar cuando los elementos entran en la vista
-    const observer = new IntersectionObserver((entries, obs) => {
+      // Creamos un observer que detecta cuando los elementos entran en pantalla
+      const observer = new IntersectionObserver((entries, obs) => {
+        entries.forEach(entry => {
 
-      // Itera sobre cada elemento observado
-      entries.forEach(entry => {
+          // Si el elemento está visible en el viewport
+          if (entry.isIntersecting) {
+            const el = entry.target as HTMLElement;
 
-        // Si el elemento está visible en la pantalla
-        if (entry.isIntersecting) {
+            // Sólo animamos si el atributo data-animacion = true
+            if (el.getAttribute('data-animacion') === 'true') {
 
-          // Obtiene el elemento HTML que está intersectando
-          const el = entry.target as HTMLElement;
+              // Obtenemos el valor objetivo (número final a mostrar)
+              const valor = parseInt(el.getAttribute('data-valor') || '0', 10);
+              let current = 0; // valor inicial
 
-          // Obtiene el valor objetivo desde el atributo 'data-value' (o 0 si no existe)
-          const value = parseInt(el.getAttribute('data-value') || '0', 10);
+              // Creamos una animación con setInterval que va incrementando el número
+              const interval = setInterval(() => {
+                current++; // incrementamos en 1
 
-          // Inicializa el valor actual en 0
-          let current = 0;
+                // Buscamos dentro del elemento el span/p que mostrará el valor
+                const numberEl = el.querySelector('.metrica-valor');
+                if (numberEl) numberEl.textContent = current + '+'; // Actualizamos el texto
 
-          // Intervalo que incrementa el número mostrado gradualmente
-          const interval = setInterval(() => {
-            current++; // Incrementa el número actual
+                // Cuando llegamos al valor final, detenemos el intervalo
+                if (current >= valor) clearInterval(interval);
 
-            // Busca el <p> dentro del elemento para actualizar el número
-            const numberEl = el.querySelector('p');
-            if (numberEl) numberEl.textContent = current + '+'; // Muestra el número + símbolo
+              }, 30); // cada 30ms actualiza el valor (≈33 fps)
+            }
 
-            // Cuando el número alcanza el valor objetivo, detiene el intervalo
-            if (current >= value) clearInterval(interval);
-          }, 30); // Incrementa cada 30 milisegundos
+            // Dejamos de observar este elemento porque ya fue animado
+            obs.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.3 });
+      // threshold: 0.3 → se dispara cuando al menos el 30% del elemento está visible
 
-          // Deja de observar este elemento, ya que la animación se completó
-          obs.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.3 }); // El callback se activa cuando el 30% del elemento es visible
-
-    // Observa cada elemento que tenga referencia en this.metrics
-    this.metrics.forEach(m => observer.observe(m.nativeElement));
-  }
+      // Asignamos el observer a cada métrica del template (QueryList de @ViewChildren)
+      this.metricas.forEach(m => observer.observe(m.nativeElement));
+    }
   }
 
   NavegarAServicios() {
@@ -134,8 +197,8 @@ export class HomeComponent implements AfterViewInit, OnInit {
   }
 
   ActivarAnimacion() {
-      const section = this.el.nativeElement.querySelector('#home-section');
-      animateOnScroll(section);
+    const section = this.el.nativeElement.querySelector('#home-section');
+    animateOnScroll(section);
   }
 
   EvitarSSR() {
@@ -143,6 +206,26 @@ export class HomeComponent implements AfterViewInit, OnInit {
     const section = this.el.nativeElement.querySelector('#servicios-section') as HTMLElement;
     if (section) animateOnScroll(section);
   }
+
+  CloseModal() {
+    this.showInfoModal = false;
+    this.selectedMetricTitle = '';
+    this.selectedMetricInfo = [];
+  }
+
+  @HostListener('window:scroll')
+  OnWindowScroll() {
+    if (!this.contactSection) return;
+
+    const rect = this.contactSection.nativeElement.getBoundingClientRect();
+    // Si la sección está visible en viewport
+    this.mostrarBotonFlotante = !(rect.top < window.innerHeight && rect.bottom >= 0);
+  }
+  
+  AbrirCalculadora() { this.showCalculadora = true; }
+
+  CerrarCalculadora() { this.showCalculadora = false; }
+  
   //#endregion
 
 }

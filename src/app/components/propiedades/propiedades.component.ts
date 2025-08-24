@@ -1,6 +1,6 @@
 import { AfterViewInit, Component,ElementRef } from '@angular/core';
-import { IPropiedades } from './models/propiedades.models';
-import { PROPIEDADES_MOCK } from './mock/propiedades.mock';
+import { IPropiedades } from '../../models/propiedades/propiedades.models';
+import { PROPIEDADES_MOCK } from '../../mocks/propiedades/propiedades.mock';
 import { CommonModule } from '@angular/common'
 import { TarjetaComponent } from '../tarjeta/tarjeta/tarjeta.component';
 import { TarjetaDetallesComponent } from '../tarjeta-detalles/tarjeta-detalles/tarjeta-detalles.component';
@@ -37,6 +37,7 @@ export class PropiedadesComponent implements AfterViewInit{
   propiedadSeleccionada: IPropiedades | null = null;
 
   faCalculator = faCalculator;
+
   //#endregion
 
   //#region Procedimientos
@@ -48,6 +49,7 @@ export class PropiedadesComponent implements AfterViewInit{
     const section = this.el.nativeElement.querySelector('#propiedades-section');
     animateOnScroll(section);
   }
+
   //#endregion
   
 }

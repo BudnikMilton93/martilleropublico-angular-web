@@ -21,3 +21,19 @@
 .card-custom {
   box-shadow: 0px 8px 25px rgba(0, 0, 0, 0.15);
 }
+
+.wpp-btn {
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+  pointer-events: none; // evita clics cuando está oculto
+}
+
+.fade-in {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.fade-out {
+  opacity: 0;
+  pointer-events: none;
+}

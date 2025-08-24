@@ -1,6 +1,6 @@
 import { Component, Input  } from '@angular/core';
 import { CommonModule } from '@angular/common'
-import { IPropiedades } from '../../propiedades/models/propiedades.models';
+import { IPropiedades } from '../../../models/propiedades/propiedades.models';
 import { faXmark, faChevronLeft, faChevronRight, faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons';
 import { faWhatsapp } from '@fortawesome/free-brands-svg-icons';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';

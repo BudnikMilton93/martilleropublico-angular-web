@@ -1,0 +1,75 @@
+<!-- Overlay -->
+<div *ngIf="open" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+  <!-- Contenedor modal -->
+  <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full p-6 relative animate-fadeIn">
+
+    <!-- Botón cerrar -->
+    <button (click)="onClose()" 
+      class="absolute top-3 right-3 text-gray-500 hover:text-gray-800 text-xl transition">
+      ✕
+    </button>
+
+    <!-- Título -->
+    <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Calculadora de Indexación</h2>
+
+    <!-- Formulario -->
+    <div class="space-y-5">
+
+      <!-- Monto inicial -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Monto del contrato</label>
+        <input type="number" [(ngModel)]="montoInicial" name="montoInicial" #montoInicialCtrl="ngModel"
+          required min="0" step="0.01"
+          class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500" />
+        <div *ngIf="montoInicialCtrl.invalid && montoInicialCtrl.touched" class="text-red-500 text-sm mt-1">
+          Ingrese un monto válido.
+        </div>
+      </div>
+
+      <!-- Fechas -->
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Fecha inicio</label>
+          <input type="date" [(ngModel)]="fechaInicio"
+            class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Fecha cálculo</label>
+          <input type="date" [(ngModel)]="fechaCalculo"
+            class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500" />
+        </div>
+      </div>
+
+      <!-- Frecuencia -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Frecuencia de actualización</label>
+        <select [(ngModel)]="frecuencia"
+          class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500">
+          <option *ngFor="let f of frecuencias" [value]="f">{{ f }} meses</option>
+        </select>
+      </div>
+
+      <!-- Índice -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Índice de actualización</label>
+        <select [(ngModel)]="indiceSeleccionado"
+          class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500">
+          <option *ngFor="let i of indicesDisponibles" [value]="i">{{ i }}</option>
+        </select>
+      </div>
+
+      <!-- Botón -->
+      <button (click)="Calcular()"
+        class="w-full bg-gray-600 text-white px-4 py-2 rounded-xl hover:bg-gray-700 transition-colors duration-200">
+        Calcular
+      </button>
+
+      <!-- Resultado -->
+      <div *ngIf="resultado !== null" class="mt-6 p-4 bg-gray-50 border border-gray-200 rounded-xl text-center">
+        <p class="text-gray-700">Monto actualizado:</p>
+        <p class="text-2xl font-bold bg-gray-400">{{ resultado | currency:'ARS':'symbol':'1.2-2' }}</p>
+      </div>
+
+    </div>
+  </div>
+</div>

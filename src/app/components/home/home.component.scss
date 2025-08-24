@@ -19,24 +19,11 @@
       margin-bottom: 1.5rem;
       color: #333;
     }
-
-    .btn-contacto {
-      padding: 0.8rem 1.5rem;
-      background-color: #00796b;
-      color: white;
-      border-radius: 5px;
-      text-decoration: none;
-      font-weight: bold;
-      transition: background-color 0.3s ease;
-
-      &:hover {
-        background-color: #004d40;
-      }
-    }
   }
 
   .image {
     flex: 1;
+
     img {
       width: 100%;
       border-radius: 10px;
@@ -48,6 +35,22 @@
 
 span {
   display: inline-block;
+}
+
+.wpp-btn {
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+  pointer-events: none; // evita clics cuando está oculto
+}
+
+.fade-in {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.fade-out {
+  opacity: 0;
+  pointer-events: none;
 }
 
 
@@ -84,6 +87,6 @@ span {
         max-height: 250px;
       }
     }
-    
+
   }
 }

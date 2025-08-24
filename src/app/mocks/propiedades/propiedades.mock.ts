@@ -1,4 +1,4 @@
-import { IPropiedades } from '../models/propiedades.models';
+import { IPropiedades } from '../../models/propiedades/propiedades.models';
 
 export const PROPIEDADES_MOCK: IPropiedades[] = [
   {

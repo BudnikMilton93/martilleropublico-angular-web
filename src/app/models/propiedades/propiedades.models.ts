@@ -1,4 +1,4 @@
-import { ITarjetaData } from '../../tarjeta/tarjeta/tarjeta.model';
+import { ITarjetaData } from '../../models/tarjeta/tarjeta.model';
 
 export interface IPropiedades extends ITarjetaData {
   ubicacion?: string;

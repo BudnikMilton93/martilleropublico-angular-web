@@ -8,12 +8,11 @@
     <!-- Contenido -->
     <div class="relative container mx-auto px-4 py-12">
 
-        <h2 class="text-3xl md:text-4xl font-bold mb-12 text-center text-white">Nuestros Servicios</h2>
+        <h2 class="text-3xl md:text-4xl font-bold mb-12 text-center text-white">Nuestros Servicios </h2>
 
         <!-- Grid de servicios -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div *ngFor="let servicio of servicios"
-                class="bg-white/70  border border-gray-200 rounded-2xl card-custom p-6 flex flex-col items-center 
+            <div *ngFor="let servicio of servicios" class="bg-white/70  border border-gray-200 rounded-2xl card-custom p-6 flex flex-col items-center 
                        text-center transform transition duration-300 hover:scale-105 hover:shadow-xl">
 
                 <!-- Icono Font Awesome -->
@@ -28,20 +27,20 @@
             <h3 class="text-3xl md:text-4xl font-bold mb-8 text-white">
                 ¿Por qué elegirnos?
             </h3>
-        
+
             <ul class="space-y-4 max-w-2xl mx-auto text-center">
                 <li class="flex flex-col items-center gap-2">
                     <fa-icon [icon]="['fas', 'check-circle']"
                         class="text-white text-2xl border-2 border-white rounded-full p-1"></fa-icon>
                     <span class="text-black text-lg text-center">Más de 10 años de experiencia en el rubro</span>
                 </li>
-            
+
                 <li class="flex flex-col items-center gap-2">
                     <fa-icon [icon]="['fas', 'user']"
                         class="text-white text-2xl border-2 border-white rounded-full p-1"></fa-icon>
                     <span class="text-black text-lg text-center">Equipo profesional y dedicado</span>
                 </li>
-            
+
                 <li class="flex flex-col items-center gap-2">
                     <fa-icon [icon]="['fas', 'award']"
                         class="text-white text-2xl border-2 border-white rounded-full p-1"></fa-icon>
@@ -51,14 +50,20 @@
         </div>
 
         <!-- Botón de WhatsApp -->
-        <div class="mt-8 text-center">
+        <div #contactSection id="cta-wpp" class="mt-8 text-center">
             <p class="mb-3 text-lg font-medium text-black">¿Querés más información sobre nuestros servicios?</p>
-            <a href="https://wa.me/5491123456789" target="_blank" rel="noopener"
-                class="inline-flex items-center gap-2 bg-green-500 text-white px-6 py-3 rounded-lg 
+            <a href="https://wa.me/5491123456789" target="_blank" rel="noopener" class="inline-flex items-center gap-2 bg-green-500 text-white px-6 py-3 rounded-lg 
                     hover:bg-green-600 transition duration-300 shadow-md">
                 <fa-icon [icon]="['fab', 'whatsapp']" class="text-2xl"></fa-icon>
                 <span class="font-semibold">Contactarnos</span>
             </a>
         </div>
     </div>
-</section>                
+</section>
+
+<!-- Botón flotante WhatsApp -->
+<a href="https://wa.me/5491123456789" target="_blank"
+    class="wpp-btn fixed bottom-4 right-4 z-50 bg-green-500 text-white p-4 rounded-full shadow-lg hover:bg-green-600 transition"
+    [ngClass]="{ 'fade-in': mostrarBotonFlotante, 'fade-out': !mostrarBotonFlotante }">
+    <fa-icon [icon]="['fab','whatsapp']" class="text-3xl"></fa-icon>
+</a>

@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, ElementRef  } from '@angular/core';
+import { Component, AfterViewInit, ElementRef, ViewChild, HostListener  } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { faSearch, faGavel, faCircleQuestion, faRulerCombined, faCheckCircle, faUser, faAward } from '@fortawesome/free-solid-svg-icons';
@@ -17,6 +17,9 @@ export class ServiciosComponent implements AfterViewInit {
   constructor(library: FaIconLibrary, private el: ElementRef) {
     library.addIcons(faSearch, faGavel, faCircleQuestion, faRulerCombined, faWhatsapp, faCheckCircle, faUser, faAward);
   }
+
+  @ViewChild('contactSection') contactSection!: ElementRef<HTMLElement>;
+  
 
   //#region Eventos
   ngAfterViewInit(): void {
@@ -51,6 +54,8 @@ export class ServiciosComponent implements AfterViewInit {
       icon: faCircleQuestion
     }
   ];
+
+  mostrarBotonFlotante = true;
   //#endregion
 
   //#region Procedimientos
@@ -58,6 +63,15 @@ export class ServiciosComponent implements AfterViewInit {
     const section = this.el.nativeElement.querySelector('#servicios-section');
     animateOnScroll(section);
   }
+
+  @HostListener('window:scroll')
+    OnWindowScroll() {
+      if (!this.contactSection) return;
+  
+      const rect = this.contactSection.nativeElement.getBoundingClientRect();
+      // Si la sección está visible en viewport
+      this.mostrarBotonFlotante = !(rect.top < window.innerHeight && rect.bottom >= 0);
+    }
   //#endregion
 
 }

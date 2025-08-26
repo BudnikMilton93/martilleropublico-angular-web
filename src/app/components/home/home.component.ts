@@ -2,12 +2,15 @@ import { AfterViewInit, Component, NgZone, ElementRef, ViewChildren, QueryList, 
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Router } from '@angular/router';
 import { animateOnScroll } from '../../shared/utils/animations';
-import { faWhatsapp } from '@fortawesome/free-brands-svg-icons';
+import { faWhatsapp, faFacebook  } from '@fortawesome/free-brands-svg-icons';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
-import { IPropiedades } from '../../models/propiedades/propiedades.models';
-import { PROPIEDADES_MOCK } from '../../mocks/propiedades/propiedades.mock';
-import { InformacionModalComponent } from '../informacion-modal/informacion-modal.component';
 import { CalculadoraComponent } from '../calculadora/calculadora.component';
+import { METRICAS_MOCK } from '../../mocks/home/metricas.mock';
+import { PROPIEDADES_MOCK } from '../../mocks/propiedades/propiedades.mock';
+import { IPropiedades } from '../../models/propiedades/propiedades.models';
+import { Metrica } from '../../models/home/metricas.model';
+import { InformacionModalComponent } from '../informacion-modal/informacion-modal.component';
+import { faPhone } from '@fortawesome/free-solid-svg-icons';
 
 
 
@@ -24,13 +27,22 @@ export class HomeComponent implements AfterViewInit, OnInit {
   constructor(@Inject(PLATFORM_ID) private platformId: Object, private ngZone: NgZone, private router: Router, private el: ElementRef, library: FaIconLibrary) {
     // arrancamos el loop fuera de Angular
     this.ngZone.runOutsideAngular(() => this.EmpezarCarrusel());
-    library.addIcons(faWhatsapp);
+    library.addIcons(faWhatsapp, faPhone, faFacebook );
   }
 
   //#region Decoradores
   @ViewChildren('metrica') metricas!: QueryList<ElementRef>;
+  
   @ViewChild('contactSection') contactSection!: ElementRef<HTMLElement>;
 
+  @HostListener('window:scroll')
+  OnWindowScroll() {
+    if (!this.contactSection) return;
+
+    const rect = this.contactSection.nativeElement.getBoundingClientRect();
+    // Si la sección está visible en viewport
+    this.mostrarBotonFlotante = !(rect.top < window.innerHeight && rect.bottom >= 0);
+  }  
   //#endregion
 
   //#region Eventos
@@ -73,51 +85,7 @@ export class HomeComponent implements AfterViewInit, OnInit {
     'assets/images/home/home2.jpg'
   ];
 
-  metricasData = [
-    {
-      valor: 50,
-      titulo: 'Ventas Concretadas',
-      icono: 'assets/images/home/casa.png',
-      animacion: true,
-      info: [
-        'Más de 50 operaciones cerradas con clientes satisfechos.',
-        'Procesos de compraventa ágiles y transparentes.',
-        'Acompañamiento integral durante toda la operación.',
-        'Red de contactos que facilita la concreción de negocios.'
-      ]
-    },
-    {
-      valor: 30,
-      titulo: 'Tasaciones',
-      icono: 'assets/images/home/tasacion.png',
-      animacion: true,
-      info: [
-        'Tasaciones profesionales y actualizadas al mercado.',
-        'Evaluaciones objetivas y confiables.',
-        'Informes claros para una mejor toma de decisiones.'
-      ]
-    },
-    {
-      valor: 5,
-      titulo: 'Localidades',
-      icono: 'assets/images/home/localidades.png',
-      animacion: true,
-      info: [
-        'Nuestros servicios llegan a las localidades de:',
-        'Huingan Có',
-        'Taquimilán',
-        'Las Ovejas',
-        'Andacollo'
-      ]
-    },
-    {
-      valor: 25,
-      titulo: 'Calculadora de Indexación',
-      icono: 'assets/images/home/calculadora.png',
-      animacion: false,
-      info: [] // no aplica
-    },
-  ];
+  metricasData: Metrica[] = METRICAS_MOCK;
 
   propiedadesDestacadas: IPropiedades[] = [];
   selectedMetricInfo: string[] = [];
@@ -213,15 +181,6 @@ export class HomeComponent implements AfterViewInit, OnInit {
     this.selectedMetricInfo = [];
   }
 
-  @HostListener('window:scroll')
-  OnWindowScroll() {
-    if (!this.contactSection) return;
-
-    const rect = this.contactSection.nativeElement.getBoundingClientRect();
-    // Si la sección está visible en viewport
-    this.mostrarBotonFlotante = !(rect.top < window.innerHeight && rect.bottom >= 0);
-  }
-  
   AbrirCalculadora() { this.showCalculadora = true; }
 
   CerrarCalculadora() { this.showCalculadora = false; }

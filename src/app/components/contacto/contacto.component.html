@@ -1,1 +1,130 @@
-<p>contacto works!</p>
+<section id="contactanos-section"
+    class="bg-[#e0e2e6] relative pt-[4rem] opacity-0 transform -translate-x-10 transition-all duration-700 bg-cover bg-center"
+    style="background-image: url('/assets/images/contacto/contacto.jpg');">
+
+    <!-- Overlay solo sobre el fondo -->
+    <div class="absolute inset-0 bg-black bg-opacity-40 pointer-events-none"></div>
+
+    <div class="relative z-10 max-w-7xl mx-auto px-4 py-12 space-y-12">
+
+        <!-- FILA 1: Título centrado + Botones derecha -->
+        <div class="flex flex-col lg:flex-row items-center justify-between gap-6 relative">
+
+            <!-- Título centrado -->
+            <h2 class="text-3xl md:text-4xl font-bold text-white flex-1">
+                Contáctanos
+            </h2>
+
+            <!-- Botones derecha -->
+            <div class="flex flex-wrap gap-4 justify-center lg:justify-end">
+
+                <!-- WhatsApp -->
+                <div class="relative group">
+                    <a href="https://wa.me/5491123456789" target="_blank"
+                        class="w-12 h-12 flex items-center justify-center rounded-full bg-[#e0e2e6] text-gray-600 shadow-[0_4px_15px_rgba(0,0,0,0.3)] hover:bg-green-600 transform transition duration-200 hover:animate-bounce-button">
+                        <fa-icon [icon]="['fab','whatsapp']" class="text-lg"></fa-icon>
+                    </a>
+                    <span
+                        class="absolute bottom-full mb-2 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 z-50">
+                        WhatsApp
+                    </span>
+                </div>
+
+                <!-- Teléfono -->
+                <div class="relative group">
+                    <a href="tel:+5492972123456"
+                        class="w-12 h-12 flex items-center justify-center rounded-full bg-[#e0e2e6] text-gray-600 shadow-[0_4px_15px_rgba(0,0,0,0.3)] hover:bg-red-600 transform transition duration-200 hover:animate-bounce-button">
+                        <fa-icon [icon]="['fas','phone']" class="text-lg"></fa-icon>
+                    </a>
+                    <span
+                        class="absolute bottom-full mb-2 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 z-50">
+                        Llamar
+                    </span>
+                </div>
+
+                <!-- Facebook -->
+                <div class="relative group">
+                    <a href="https://facebook.com/tu-pagina" target="_blank"
+                        class="w-12 h-12 flex items-center justify-center rounded-full bg-[#e0e2e6] text-gray-600 shadow-[0_4px_15px_rgba(0,0,0,0.3)] hover:bg-blue-700 transform transition duration-200 hover:animate-bounce-button">
+                        <fa-icon [icon]="['fab','facebook-f']" class="text-lg"></fa-icon>
+                    </a>
+                    <span
+                        class="absolute bottom-full mb-2 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 z-50">
+                        Facebook
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- FILA 2: Descripciones mejoradas -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 text-center lg:text-left">
+
+            <!-- Texto izquierda -->
+            <div class="bg-black bg-opacity-30 p-6 rounded-lg">
+                <h3 class="text-xl font-bold text-white" style="text-shadow: 1px 1px 4px rgba(0,0,0,0.6);">
+                    Comunicate por mail
+                </h3>
+                <p class="text-white text-sm" style="text-shadow: 1px 1px 3px rgba(0,0,0,0.6);">
+                    Envíanos tu consulta y te responderemos a la brevedad.
+                </p>
+            </div>
+
+            <!-- Texto derecha -->
+            <div class="bg-black bg-opacity-30 p-6 rounded-lg">
+                <h3 class="text-xl font-bold text-white" style="text-shadow: 1px 1px 4px rgba(0,0,0,0.6);">
+                    Acercate a nuestras oficinas
+                </h3>
+                <p class="text-white text-sm" style="text-shadow: 1px 1px 3px rgba(0,0,0,0.6);">
+                    Estamos ubicados en La Rioja 44, Chos Malal, Neuquén, Argentina.
+                </p>
+            </div>
+
+        </div>
+
+        <!-- FILA 3: Formulario izquierda + Mapa derecha -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+            <!-- Formulario -->
+            <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" class="bg-white p-6 rounded-lg shadow-lg space-y-4">
+                <input type="text" formControlName="name" placeholder="Nombre" class="w-full p-2 border rounded" />
+                <input type="email" formControlName="email" placeholder="Email" class="w-full p-2 border rounded" />
+                <input type="text" formControlName="phone" placeholder="Teléfono (opcional)"
+                    class="w-full p-2 border rounded" />
+
+                <select formControlName="localidad" class="w-full p-2 border rounded">
+                    <option value="">Seleccione su localidad</option>
+                    <option *ngFor="let loc of localidades" [value]="loc.label">
+                        {{ loc.label }}
+                    </option>
+                </select>
+
+                <textarea formControlName="message" placeholder="Escriba su mensaje" rows="4"
+                    class="w-full p-2 border rounded"></textarea>
+
+                <input type="text" formControlName="website" style="display:none" autocomplete="off">
+
+                <button type="submit" [disabled]="!contactForm.valid || enviando || contador"
+                    class="w-full bg-gray-600 text-white p-3 rounded hover:bg-gray-800 flex items-center justify-center transition">
+                    <span *ngIf="enviando">Enviando...</span>
+                    <span *ngIf="!enviando && contador">Esperá {{ contador }}s</span>
+                    <span *ngIf="!enviando && !contador">Enviar mensaje</span>
+                </button>
+
+                <div *ngIf="enviado" class="text-green-600 mt-2">Mensaje enviado con éxito</div>
+                <div *ngIf="error" class="mt-4 text-red-600 text-sm">
+                    Ocurrió un error al enviar: {{ errorDetalle }}
+                </div>
+
+            </form>
+
+            <!-- Mapa -->
+            <div class="rounded-lg overflow-hidden shadow-lg h-[400px]">
+                <iframe
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d515.0948125975467!2d-70.2705954!3d-37.3831892!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9672722103c98b9d%3A0x8b7697c203b247d1!2sLa%20Rioja%2044%2C%20Q8353BGA%20Chos%20Malal%2C%20Neuqu%C3%A9n%2C%20Argentina!5e0!3m2!1ses-419!2sar!4v1692881590000!5m2!1ses-419!2sar"
+                    width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
+            </div>
+        </div>
+    </div>
+</section>

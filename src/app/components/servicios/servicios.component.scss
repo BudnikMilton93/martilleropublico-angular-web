@@ -37,3 +37,19 @@
   opacity: 0;
   pointer-events: none;
 }
+
+
+
+/* Rebote personalizado al hover */
+@keyframes bounce-button {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+.hover\:animate-bounce-button:hover {
+  animation: bounce-button 0.4s ease;
+}

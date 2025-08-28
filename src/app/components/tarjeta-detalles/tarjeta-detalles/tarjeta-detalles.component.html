@@ -6,7 +6,7 @@
 
     <!-- Botón cerrar -->
     <button (click)="Cerrar()"
-      class="absolute top-4 right-4 z-50 bg-gray-800 text-white rounded-full p-3 shadow-lg hover:bg-gray-700 transition">
+      class="absolute top-4 right-4 z-50 bg-gray-800 text-white rounded-full w-12 h-12 shadow-lg hover:bg-gray-700 transition">
       <fa-icon [icon]="faXmark" class="text-xl"></fa-icon>
     </button>
 
@@ -16,12 +16,12 @@
         class="w-full h-64 object-cover rounded-lg transition-transform duration-500 ease-in-out transform hover:scale-105">
 
       <button (click)="ImagenAnterior()"
-        class="absolute left-2 top-1/2 transform -translate-y-1/2 z-40 bg-white/70 p-2 rounded-full hover:bg-white/90 transition">
+        class="absolute left-2 top-1/2 transform -translate-y-1/2 z-40 bg-white/70 w-10 h-10 rounded-full hover:bg-white/90 transition">
         <fa-icon [icon]="faChevronLeft" class="text-gray-800"></fa-icon>
       </button>
 
       <button (click)="ImagenSiguiente()"
-        class="absolute right-2 top-1/2 transform -translate-y-1/2 z-40 bg-white/70 p-2 rounded-full hover:bg-white/90 transition">
+        class="absolute right-2 top-1/2 transform -translate-y-1/2 z-40 bg-white/70 w-10 h-10 rounded-full hover:bg-white/90 transition">
         <fa-icon [icon]="faChevronRight" class="text-gray-800"></fa-icon>
       </button>
     </div>
@@ -56,7 +56,7 @@
       </a>
 
       <!-- WhatsApp -->
-      <a [href]="'https://wa.me/5491123456789?text= Hola! Estoy interesado en la propiedad ubicada en ' + data.ubicacion"
+      <a [href]="'https://wa.me/5492942655415?text= Hola! Estoy interesado en la propiedad ubicada en ' + data.ubicacion"
         target="_blank" rel="noopener noreferrer"
         class="flex items-center space-x-2 bg-green-600 text-white px-4 py-2 rounded-full shadow hover:bg-green-700 transition">
         <fa-icon [icon]="faWhatsapp"></fa-icon>

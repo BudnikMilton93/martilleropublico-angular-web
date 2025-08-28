@@ -4,11 +4,13 @@
     transform: translateY(0);
   }
   50% {
-    transform: translateY(-6px);
+    transform: translateY(-10px);
   }
 }
 
 .hover\:animate-bounce-button:hover {
-  animation: bounce-button 0.4s ease;
+  animation: bounce-button 0.7s ease;
 }
+
+
 

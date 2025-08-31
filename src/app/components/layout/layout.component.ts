@@ -38,6 +38,10 @@ export class LayoutComponent {
   toggleMenu() {
     this.mobileMenuOpen = !this.mobileMenuOpen;
   }
+
+  closeMenu() {
+    this.mobileMenuOpen = false;
+  }
   //#endregion
 
 }

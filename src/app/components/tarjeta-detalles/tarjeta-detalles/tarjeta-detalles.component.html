@@ -64,13 +64,6 @@
       </a>
     </div>
 
-    
-
-    <!-- Precio -->
-    <p *ngIf="data.price" class="text-xl font-semibold text-green-600 mt-4">
-      {{ data.price }}
-    </p>
-
     <!-- Tags -->
     <div *ngIf="data.tags?.length" class="flex gap-2 flex-wrap mt-4">
       <span *ngFor="let tag of data.tags" class="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded-lg">

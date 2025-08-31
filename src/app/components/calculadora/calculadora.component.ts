@@ -34,7 +34,8 @@ export class CalculadoraComponent {
   resultado: number | null = null;
 
   frecuencias = [1, 3, 6, 12];
-  indicesDisponibles = ['ICL', 'IPC', 'CASA PROPIA'];
+  indicesDisponibles = ['ICL'];
+  // indicesDisponibles = ['ICL', 'IPC', 'CASA PROPIA'];
 
   onClose() {
     this.closed.emit();

@@ -20,8 +20,9 @@ export const METRICAS_MOCK: Metrica[] = [
     animacion: true,
     info: [
       'Tasaciones profesionales y actualizadas al mercado.',
-      'Evaluaciones objetivas y confiables.',
-      'Informes claros para una mejor toma de decisiones.'
+      'Urbanas.',
+      'Rurales.',
+      'Vehiculares.'
     ]
   },
   {

@@ -22,26 +22,31 @@
 </div> -->
 
 <!-- HEADER -->
-<header [ngClass]="{ 'scrolled': isScrolled }" class="bg-[#545353] text-white shadow-md fixed top-0 w-full z-50 transition-all duration-300 ease-in-out">
-  <div class="container mx-auto flex flex-wrap items-center justify-between p-2 transition-all duration-300 ease-in-out">
+<header [ngClass]="{ 'scrolled': isScrolled }"
+  class="bg-[#545353] text-white shadow-md fixed top-0 w-full z-50 transition-all duration-300 ease-in-out">
+  <div
+    class="container mx-auto flex flex-wrap items-center justify-between p-2 transition-all duration-300 ease-in-out">
     <a routerLink="/" class="flex items-center space-x-3">
-      <img src="assets/images/home/LOGO ZM.png" alt="Logo Martillero" 
-      class="w-13 h-12 object-cover" />
-      <span class="text-lg font-bold">Martilleros y Corredores Públicos</span>
+      <img src="assets/images/home/LOGO ZM.png" alt="Logo Martillero" class="w-13 h-12 object-cover" />
+      <span class="text-lg font-bold">Martillero y Corredor Público</span>
     </a>
 
     <!-- Menú Desktop -->
     <nav class="hidden md:flex space-x-6 font-medium bg-[#545353]">
-      <a routerLink="/" routerLinkActive="text-[#E0A96D]" [routerLinkActiveOptions]="{ exact: true }" class="hover:text-[#E0A96D] transition"> Inicio</a>
-      <a routerLink="/servicios" routerLinkActive="text-[#E0A96D]" [routerLinkActiveOptions]="{ exact: true }" class="hover:text-[#E0A96D] transition">Servicios</a>
-      <a routerLink="/propiedades" routerLinkActive="text-[#E0A96D]" [routerLinkActiveOptions]="{ exact: true }" class="hover:text-[#E0A96D] transition">Propiedades</a>
-      <a routerLink="/contacto" routerLinkActive="text-[#E0A96D]" [routerLinkActiveOptions]="{ exact: true }" class="hover:text-[#E0A96D] transition">Contacto</a>
+      <a routerLink="/" routerLinkActive="text-[#E0A96D]" [routerLinkActiveOptions]="{ exact: true }"
+        class="hover:text-[#E0A96D] transition"> Inicio</a>
+      <a routerLink="/servicios" routerLinkActive="text-[#E0A96D]" [routerLinkActiveOptions]="{ exact: true }"
+        class="hover:text-[#E0A96D] transition">Servicios</a>
+      <a routerLink="/propiedades" routerLinkActive="text-[#E0A96D]" [routerLinkActiveOptions]="{ exact: true }"
+        class="hover:text-[#E0A96D] transition">Propiedades</a>
+      <a routerLink="/contacto" routerLinkActive="text-[#E0A96D]" [routerLinkActiveOptions]="{ exact: true }"
+        class="hover:text-[#E0A96D] transition">Contacto</a>
     </nav>
 
     <!-- Menú móvil -->
     <button class="md:hidden focus:outline-none" (click)="toggleMenu()">
-      <svg class="w-8 h-8 text-[#E0A96D]" fill="none" stroke="currentColor" stroke-width="2"
-           viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+      <svg class="w-8 h-8 text-[#E0A96D]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
+        stroke-linecap="round" stroke-linejoin="round">
         <line x1="3" y1="6" x2="21" y2="6" />
         <line x1="3" y1="12" x2="21" y2="12" />
         <line x1="3" y1="18" x2="21" y2="18" />
@@ -51,10 +56,13 @@
 
   <!-- Menú móvil desplegable -->
   <nav *ngIf="mobileMenuOpen" class="bg-[#545353] md:hidden">
-    <a routerLink="/" class="block px-4 py-2 hover:bg-[#E0A96D] hover:text-[#545353]">Inicio</a>
-    <a routerLink="/servicios" class="block px-4 py-2 hover:bg-[#E0A96D] hover:text-[#545353]">Servicios</a>
-    <a routerLink="/propiedades" class="block px-4 py-2 hover:bg-[#E0A96D] hover:text-[#545353]">Propiedades</a>
-    <a routerLink="/contacto" class="block px-4 py-2 hover:bg-[#E0A96D] hover:text-[#545353]">Contacto</a>
+    <a routerLink="/" class="block px-4 py-2 hover:bg-[#E0A96D] hover:text-[#545353]" (click)="closeMenu()">Inicio</a>
+    <a routerLink="/servicios" class="block px-4 py-2 hover:bg-[#E0A96D] hover:text-[#545353]"
+      (click)="closeMenu()">Servicios</a>
+    <a routerLink="/propiedades" class="block px-4 py-2 hover:bg-[#E0A96D] hover:text-[#545353]"
+      (click)="closeMenu()">Propiedades</a>
+    <a routerLink="/contacto" class="block px-4 py-2 hover:bg-[#E0A96D] hover:text-[#545353]"
+      (click)="closeMenu()">Contacto</a>
   </nav>
 </header>
 
@@ -66,7 +74,7 @@
 <!-- FOOTER -->
 <footer class="bg-[#545353] text-white py-6 mt-10">
   <div class="container mx-auto text-center text-sm">
-    <p>© 2025 Z & M Propiedades - Chos Malal, Neuquén</p>
+    <p>© 2025 Z&M Propiedades - Chos Malal, Neuquén</p>
     <p class="mt-1">Sitio desarrollado por Milton Budnik</p>
   </div>
 </footer>

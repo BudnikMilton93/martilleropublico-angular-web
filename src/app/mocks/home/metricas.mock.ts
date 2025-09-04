@@ -4,7 +4,7 @@ export const METRICAS_MOCK: Metrica[] = [
   {
     valor: 50,
     titulo: 'Ventas Concretadas',
-    icono: 'assets/images/home/casa.png',
+    icono: 'assets/images/home/referencias/casa.png',
     animacion: true,
     info: [
       'Más de 50 operaciones cerradas con clientes satisfechos.',
@@ -16,7 +16,7 @@ export const METRICAS_MOCK: Metrica[] = [
   {
     valor: 30,
     titulo: 'Tasaciones',
-    icono: 'assets/images/home/tasacion.png',
+    icono: 'assets/images/home/referencias/tasacion.png',
     animacion: true,
     info: [
       'Tasaciones profesionales y actualizadas al mercado.',
@@ -28,7 +28,7 @@ export const METRICAS_MOCK: Metrica[] = [
   {
     valor: 5,
     titulo: 'Localidades',
-    icono: 'assets/images/home/localidades.png',
+    icono: 'assets/images/home/referencias/localidades.png',
     animacion: true,
     info: [
       'Nuestros servicios llegan a las localidades de:',
@@ -41,7 +41,7 @@ export const METRICAS_MOCK: Metrica[] = [
   {
     valor: 25,
     titulo: 'Calculadora de Indexación',
-    icono: 'assets/images/home/calculadora.png',
+    icono: 'assets/images/home/referencias/calculadora.png',
     animacion: false,
     info: [] // no aplica
   }

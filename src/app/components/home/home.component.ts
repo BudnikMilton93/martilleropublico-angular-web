@@ -58,6 +58,7 @@ export class HomeComponent implements AfterViewInit, OnInit {
 
   ngOnInit(): void {
     try {
+      this.CargarImagenesCarrusel();
       // Tomamos las primeras 3 propiedades como destacadas
       this.propiedadesDestacadas = PROPIEDADES_MOCK.slice(0, 3);
     } catch (error) {
@@ -79,11 +80,7 @@ export class HomeComponent implements AfterViewInit, OnInit {
   //#endregion
 
   //#region Variables
-  images: string[] = [
-    'assets/images/home/home.jpg',
-    'assets/images/home/home1.jpg',
-    'assets/images/home/home2.jpg'
-  ];
+  images: string[] = [];
 
   metricasData: Metrica[] = METRICAS_MOCK;
 
@@ -100,6 +97,14 @@ export class HomeComponent implements AfterViewInit, OnInit {
   //#endregion
 
   //#region Procedimientos
+  CargarImagenesCarrusel() {
+    fetch('assets/images/home/carrusel/carrusel.json')
+    .then(res => res.json())
+    .then(data => {
+      this.images = data.images.map((img: string) => `assets/images/home/carrusel/${img}`);
+    });
+  }
+
   EmpezarCarrusel() {
     setTimeout(() => {
       this.ngZone.run(() => {

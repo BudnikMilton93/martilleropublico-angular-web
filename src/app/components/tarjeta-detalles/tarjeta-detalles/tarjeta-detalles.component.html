@@ -13,7 +13,7 @@
     <!-- Carrusel de imágenes -->
     <div *ngIf="data.imagenes?.length" class="mb-4 relative">
       <img [src]="data.imagenes[currentImage]" alt="{{ data.titulo }}"
-        class="w-full h-64 object-cover rounded-lg transition-transform duration-500 ease-in-out transform hover:scale-105">
+        class="w-full h-auto object-contain rounded-lg transition-transform duration-500 ease-in-out transform hover:scale-105">
 
       <button (click)="ImagenAnterior()"
         class="absolute left-2 top-1/2 transform -translate-y-1/2 z-40 bg-white/70 w-10 h-10 rounded-full hover:bg-white/90 transition">

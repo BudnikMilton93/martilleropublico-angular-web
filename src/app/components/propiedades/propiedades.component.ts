@@ -1,4 +1,4 @@
-import { AfterViewInit, Component,ElementRef } from '@angular/core';
+import { AfterViewInit, Component,ElementRef, OnInit } from '@angular/core';
 import { IPropiedades } from '../../models/propiedades/propiedades.models';
 import { PROPIEDADES_MOCK } from '../../mocks/propiedades/propiedades.mock';
 import { CommonModule } from '@angular/common'
@@ -16,7 +16,7 @@ import { FaIconLibrary, FontAwesomeModule } from '@fortawesome/angular-fontaweso
   templateUrl: './propiedades.component.html',
   styleUrl: './propiedades.component.scss'
 })
-export class PropiedadesComponent implements AfterViewInit{
+export class PropiedadesComponent implements AfterViewInit, OnInit {
   
   constructor(private el: ElementRef, library: FaIconLibrary) {
     library.addIcons(faCalculator);
@@ -26,6 +26,14 @@ export class PropiedadesComponent implements AfterViewInit{
   ngAfterViewInit(): void {
     try {
       this.ActivarAnimacion();
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  ngOnInit(): void {
+    try {
+      this.CargarImagenesPropiedad();
     } catch (error) {
       throw error;
     }
@@ -48,6 +56,22 @@ export class PropiedadesComponent implements AfterViewInit{
   ActivarAnimacion() {
     const section = this.el.nativeElement.querySelector('#propiedades-section');
     animateOnScroll(section);
+  }
+
+  CargarImagenesPropiedad() {
+    this.propiedades.forEach((prop, index) => {
+      this.BuscarImagenesPropiedad(prop, index);
+    });
+  }
+
+  private BuscarImagenesPropiedad(prop: IPropiedades, index: number) {
+    fetch(`assets/images/propiedades/venta-ChosMalal-elCanalito/ventaChosMalalElCanalito.json`)
+      .then(res => res.json())
+      .then(data => {
+        this.propiedades[index].imagenes = data.imagenes.map(
+          (img: string) => `assets/images/propiedades/venta-ChosMalal-elCanalito/${img}`
+        );
+      });
   }
 
   //#endregion

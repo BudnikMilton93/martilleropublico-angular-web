@@ -1,35 +1,32 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ITarjetaData } from '../../../models/tarjeta/tarjeta.model';
-import { IPropiedades } from '../../../models/propiedades/propiedades.models';
+import { Propiedad } from '../../../models/propiedades/propiedad.models'; // ajusta la ruta si es necesario
 
 @Component({
   selector: 'app-tarjeta',
   standalone: true,
   imports: [CommonModule],
   templateUrl: './tarjeta.component.html',
-  styleUrl: './tarjeta.component.scss'
+  styleUrls: ['./tarjeta.component.scss']
 })
-
 export class TarjetaComponent {
   //#region Inputs
-  @Input() data: IPropiedades = {
-    titulo: '',
-    subtitulo: '',
-    price: '',
-    imagenes: [],
-    tags: [],
-    id: ''
-  };
+  @Input() data!: Propiedad;
   //#endregion
 
   //#region Outputs
-  @Output() detailRequested = new EventEmitter<ITarjetaData>();
+  @Output() detailRequested = new EventEmitter<Propiedad>();
   //#endregion
 
   //#region Getters
   get imagenPrincipal(): string | null {
-    return this.data?.imagenes?.length ? this.data.imagenes[0] : null;
+    return this.data?.fotos?.length ? this.data.fotos[0].url : null;
+  }
+
+  get subtitulo(): string {
+    const ambientes = this.data.ambientesResumen || '';
+    const superficie = this.data.superficieResumen || '';
+    return ambientes && superficie ? `${ambientes} - ${superficie}` : ambientes || superficie;
   }
   //#endregion
 
@@ -38,5 +35,4 @@ export class TarjetaComponent {
     this.detailRequested.emit(this.data);
   }
   //#endregion
-
 }

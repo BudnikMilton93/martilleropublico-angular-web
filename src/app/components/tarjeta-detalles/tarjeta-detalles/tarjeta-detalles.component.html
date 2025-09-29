@@ -12,7 +12,7 @@
 
     <!-- Carrusel de imágenes -->
     <div *ngIf="data.imagenes?.length" class="mb-4 relative">
-      <img [src]="data.imagenes[currentImage]" alt="{{ data.titulo }}"
+      <img [src]="data.imagenes[currentImage]" [alt]="data.titulo"
         class="w-full h-auto object-contain rounded-lg transition-transform duration-500 ease-in-out transform hover:scale-105">
 
       <button (click)="ImagenAnterior()"
@@ -26,36 +26,49 @@
       </button>
     </div>
 
-    <!-- Título y subtítulo -->
+    <!-- Título -->
     <h2 class="text-2xl font-bold text-gray-800">{{ data.titulo }}</h2>
+    
+    <!-- Subtítulo -->
     <p *ngIf="data.subtitulo" class="text-md text-gray-600">{{ data.subtitulo }}</p>
 
     <!-- Descripción -->
     <p *ngIf="data.descripcion" class="text-gray-700 mt-4">{{ data.descripcion }}</p>
 
-    <p *ngIf="data.ubicacion" class="text-gray-700 mt-4">
-      Se encuentra en: {{ data.ubicacion }}
+    <!-- Ubicación -->
+    <p *ngIf="data.direccion" class="text-gray-700 mt-4">
+      Se encuentra en: {{ data.direccion }}.
     </p>
 
+    <!-- Superficie -->
+    <p *ngIf="data.superficieResumen" class="text-gray-700 mt-4">
+      Superficie construida y del terreno: {{ data.superficieResumen }}.
+    </p>
+
+    <!-- Antiguedad -->
+    <p *ngIf="data.antiguedad" class="text-gray-700 mt-4">
+      Antiguedad: {{ data.antiguedad }} año(s).
+    </p>
+
+    <!-- Habitaciones y sanitarios -->
     <div class="flex items-center space-x-6 text-gray-700 mt-4">
       <span *ngIf="data.habitaciones">
         {{ data.habitaciones }} habitación(es)
       </span>
-      <span *ngIf="data.sanitario">
-        {{ data.sanitario }} baño(s)
+      <span *ngIf="data.sanitarios">
+        {{ data.sanitarios }} baño(s)
       </span>
     </div>
 
+    <!-- Botones: Google Maps y WhatsApp -->
     <div class="flex justify-center space-x-6 mt-6">
-      <!-- Google Maps -->
-      <a [href]="'https://www.google.com/maps/search/?api=1&query=' + data.ubicacion" target="_blank"
+      <a [href]="'https://www.google.com/maps/search/?api=1&query=' + data.direccion" target="_blank"
         rel="noopener noreferrer"
         class="flex items-center space-x-2 bg-blue-600 text-white px-4 py-2 rounded-full shadow hover:bg-blue-700 transition">
         <fa-icon [icon]="faMapMarkerAlt"></fa-icon>
         <span>Mapa</span>
       </a>
 
-      <!-- WhatsApp -->
       <a [href]="'https://wa.me/5492942655415?text= Hola! Estoy interesado en la propiedad ubicada en ' + data.ubicacion"
         target="_blank" rel="noopener noreferrer"
         class="flex items-center space-x-2 bg-green-600 text-white px-4 py-2 rounded-full shadow hover:bg-green-700 transition">

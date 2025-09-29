@@ -5,6 +5,7 @@ import { ServiciosComponent } from './components/servicios/servicios.component';
 import { PropiedadesComponent } from './components/propiedades/propiedades.component';
 import { ContactoComponent } from './components/contacto/contacto.component';
 import { LayoutComponent } from './components/layout/layout.component';
+import { LoginComponent } from './components/login/login.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -12,5 +13,6 @@ export const routes: Routes = [
   { path: 'propiedades', component: PropiedadesComponent },
   { path: 'contacto', component: ContactoComponent },
   { path: 'layout', component: LayoutComponent },
+  { path: 'login', component: LoginComponent },
   { path: '**', redirectTo: '' }
 ];

@@ -1,9 +1,9 @@
-import { Component, Input  } from '@angular/core';
+import { Component, EventEmitter, Input, Output  } from '@angular/core';
 import { CommonModule } from '@angular/common'
-import { IPropiedades } from '../../../models/propiedades/propiedades.models';
 import { faXmark, faChevronLeft, faChevronRight, faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons';
 import { faWhatsapp } from '@fortawesome/free-brands-svg-icons';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import { Propiedad } from '../../../models/propiedades/propiedad.models';
 
 @Component({
   selector: 'app-tarjeta-detalles',
@@ -27,30 +27,29 @@ export class TarjetaDetallesComponent {
   currentImage = 0;
   //#endregion
 
+
   //#region Inputs
-  @Input() data!: IPropiedades; 
+  @Input() data!: Propiedad;
+  @Output() closeRequested = new EventEmitter<void>();
   //#endregion
 
   //#region Procedimientos
-  // Cambiar imagen siguiente
   ImagenSiguiente() {
-    if (this.data?.imagenes?.length) {
+    if (this.data?.imagenes.length) {
       this.currentImage = (this.currentImage + 1) % this.data.imagenes.length;
     }
   }
 
-  // Cambiar imagen anterior
   ImagenAnterior() {
-    if (this.data?.imagenes?.length) {
+    if (this.data?.imagenes.length) {
       this.currentImage = (this.currentImage - 1 + this.data.imagenes.length) % this.data.imagenes.length;
     }
   }
 
-  // Método de cierre, se puede emitir evento al componente padre
   Cerrar() {
     this.data = undefined!;
   }
   //#endregion
-  
+
   
 }

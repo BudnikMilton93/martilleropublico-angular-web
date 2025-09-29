@@ -4,18 +4,18 @@
   <!-- Imagen principal con efecto hover -->
   <div class="overflow-hidden rounded-lg mb-3">
     <img *ngIf="imagenPrincipal"
-     [src]="imagenPrincipal"
-     alt="{{ data?.titulo }}"
-     class="w-full h-auto object-contain transition-transform duration-500 ease-in-out transform hover:scale-105" />
+         [src]="imagenPrincipal"
+         alt="{{ data?.titulo }}"
+         class="w-full h-auto object-contain transition-transform duration-500 ease-in-out transform hover:scale-105" />
   </div>
 
   <h3 class="text-lg font-bold text-gray-800">{{ data.titulo }}</h3>
-  <p *ngIf="data.subtitulo" class="text-sm text-gray-500">{{ data.subtitulo }}</p>
+  <p *ngIf="subtitulo" class="text-sm text-gray-500">{{ subtitulo }}</p>
 
-  <div *ngIf="data.tags?.length" class="flex gap-2 flex-wrap mt-2">
+  <!-- <div *ngIf="data.tags?.length" class="flex gap-2 flex-wrap mt-2">
     <span *ngFor="let tag of data.tags"
           class="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded-lg">
       {{ tag }}
     </span>
-  </div>
+  </div> -->
 </div>

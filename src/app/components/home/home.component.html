@@ -69,16 +69,28 @@
 <!-- PROPIEDADES DESTACADAS -->
 <section class="bg-[#e0e2e6] py-16">
   <div class="max-w-7xl mx-auto px-4">
-    <h2 class="text-3xl font-bold text-[#545353] mb-8 text-center">Propiedades Destacadas</h2>
+    <h2 class="text-3xl font-bold text-[#545353] mb-8 text-center">
+      Propiedades Destacadas
+    </h2>
+
     <div class="grid gap-8 md:grid-cols-3">
-      <div *ngFor="let propiedad of propiedadesDestacadas"
+      <div *ngFor="let propiedad of propiedades"
         class="bg-white rounded-lg shadow-lg hover:shadow-2xl overflow-hidden transform hover:scale-105 transition duration-300">
-        <img [src]="propiedad.imagenes[0]" [alt]="propiedad.titulo" loading="lazy" class="w-full h-48 object-cover">
+        <!-- Imagen principal -->
+        <img *ngIf="propiedad.fotos.length > 0" [src]="propiedad.fotos[0].url" [alt]="propiedad.titulo" loading="lazy"
+          class="w-full h-48 object-cover" />
+        <div *ngIf="propiedad.fotos.length === 0" class="w-full h-48 bg-gray-200 flex items-center justify-center">
+          <span class="text-gray-500">Sin imagen</span>
+        </div>
+
         <div class="p-4">
-          <h3 class="text-lg font-semibold text-[#545353]">{{ propiedad.titulo }}</h3>
+          <h3 class="text-lg font-semibold text-[#545353]">
+            {{ propiedad.titulo }}
+          </h3>
           <p class="text-sm text-gray-600">
-            {{ propiedad.habitaciones }} habitaciones · {{ propiedad.sanitario || 'N/A' }} sanitario · {{ propiedad.area
-            }}
+            {{ propiedad.habitaciones || 'N/A' }} habitaciones ·
+            {{ propiedad.sanitarios || 'N/A' }} sanitarios ·
+            {{ propiedad.superficieResumen || 'N/A' }}
           </p>
         </div>
       </div>
@@ -102,23 +114,17 @@
 </section>
 
 <!-- Botón flotante WhatsApp -->
-<a href="https://wa.me/5492942655415" target="_blank"
-   class="wpp-btn fixed bottom-4 right-4 z-50 bg-green-500 text-white w-16 h-16 flex items-center justify-center rounded-full shadow-[0_4px_15px_rgba(0,0,0,0.3)] 
+<a href="https://wa.me/5492942655415" target="_blank" class="wpp-btn fixed bottom-4 right-4 z-50 bg-green-500 text-white w-16 h-16 flex items-center justify-center rounded-full shadow-[0_4px_15px_rgba(0,0,0,0.3)] 
            hover:shadow-3xl hover:animate-bounce-button"
-   [ngClass]="{ 'fade-in': mostrarBotonFlotante, 'fade-out': !mostrarBotonFlotante }">
+  [ngClass]="{ 'fade-in': mostrarBotonFlotante, 'fade-out': !mostrarBotonFlotante }">
   <fa-icon [icon]="['fab','whatsapp']" class="text-3xl"></fa-icon>
 </a>
 
 <!-- Modal información -->
-<app-informacion-modal
-  [show]="showInfoModal"
-  [title]="selectedMetricTitle"
-  [description]="selectedMetricInfo"
+<app-informacion-modal [show]="showInfoModal" [title]="selectedMetricTitle" [description]="selectedMetricInfo"
   (close)="CloseModal()">
 </app-informacion-modal>
 
 <!-- Modal calculadora -->
-<app-calculadora
-  [open]="showCalculadora"
-  (closed)="CerrarCalculadora()">
+<app-calculadora [open]="showCalculadora" (closed)="CerrarCalculadora()">
 </app-calculadora>

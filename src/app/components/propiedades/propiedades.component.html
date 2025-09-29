@@ -1,23 +1,21 @@
-<section id="propiedades-section"
-  class="bg-[#e0e2e6] relative pt-[4rem] opacity-0 transform -translate-x-10 transition-all duration-700 bg-cover bg-center">
-
+<section id="propiedades-section" class="bg-[#e0e2e6] relative pt-[4rem] opacity-0 transform -translate-x-10 transition-all duration-700 bg-cover bg-center">
   <div class="relative container mx-auto px-4 py-12">
-
     <div class="relative mb-12">
-      <!-- Título, SIEMPRE centrado en todo el contenedor -->
       <h2 class="text-3xl md:text-4xl font-bold text-[#545353] text-center">
         Nuestras Propiedades
       </h2>
     </div>
 
-    <!-- Cards -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-      <app-tarjeta *ngFor="let propiedad of propiedades" [data]="propiedad" (detailRequested)="OpenModal($event)">
+      <app-tarjeta *ngFor="let propiedad of propiedades" 
+                   [data]="propiedad" 
+                   (detailRequested)="OpenModal($event)">
       </app-tarjeta>
     </div>
   </div>
 </section>
 
-<app-tarjeta-detalles *ngIf="propiedadSeleccionada" [data]="propiedadSeleccionada"
-  (closeRequested)="propiedadSeleccionada = null">
+<app-tarjeta-detalles *ngIf="propiedadSeleccionada" 
+                       [data]="propiedadSeleccionada"
+                       (closeRequested)="propiedadSeleccionada = null">
 </app-tarjeta-detalles>

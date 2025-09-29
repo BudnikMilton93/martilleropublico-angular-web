@@ -1,25 +1,3 @@
-<!-- Topbar -->
-<!-- <div class="bg-[#2f2e2e] text-white shadow-md px-4 py-2">
-  <div class="container mx-auto flex flex-col md:flex-row items-center md:justify-start gap-4 md:gap-8 text-sm">
-    
-    <div class="flex flex-wrap items-center gap-4">
-      <span class="flex items-center gap-2">
-        <fa-icon [icon]="faWhatsapp"></fa-icon>
-        <a href="https://wa.me/5492942638089" target="_blank" class="hover:underline">WhatsApp</a>
-      </span>
-
-      <span class="flex items-center gap-2">
-        <fa-icon [icon]="faMapMarkerAlt"></fa-icon>
-        <span>La Rioja 44, Chos Malal - Neuquén</span>
-      </span>
-
-      <span class="flex items-center gap-2">
-        <fa-icon [icon]="faEnvelope"></fa-icon>
-        <a href="mailto:ZMpropiedades&#64;outlook.com.ar" class="hover:underline">ZMpropiedades&#64;outlook.com.ar</a>
-      </span>
-    </div>
-  </div>
-</div> -->
 
 <!-- HEADER -->
 <header [ngClass]="{ 'scrolled': isScrolled }"
@@ -41,6 +19,8 @@
         class="hover:text-[#E0A96D] transition">Propiedades</a>
       <a routerLink="/contacto" routerLinkActive="text-[#E0A96D]" [routerLinkActiveOptions]="{ exact: true }"
         class="hover:text-[#E0A96D] transition">Contacto</a>
+      <a routerLink="/login" routerLinkActive="text-[#E0A96D]" [routerLinkActiveOptions]="{ exact: true }"
+        class="hover:text-[#E0A96D] transition">Login</a>
     </nav>
 
     <!-- Menú móvil -->

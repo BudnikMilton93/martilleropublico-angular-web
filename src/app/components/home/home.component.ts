@@ -6,11 +6,11 @@ import { faWhatsapp, faFacebook  } from '@fortawesome/free-brands-svg-icons';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { CalculadoraComponent } from '../calculadora/calculadora.component';
 import { METRICAS_MOCK } from '../../mocks/home/metricas.mock';
-import { PROPIEDADES_MOCK } from '../../mocks/propiedades/propiedades.mock';
-import { IPropiedades } from '../../models/propiedades/propiedades.models';
 import { Metrica } from '../../models/home/metricas.model';
 import { InformacionModalComponent } from '../informacion-modal/informacion-modal.component';
 import { faPhone } from '@fortawesome/free-solid-svg-icons';
+import { Propiedad } from '../../models/propiedades/propiedad.models';
+import { PropiedadesService } from '../../services/propiedades/propiedades.service';
 
 
 
@@ -24,7 +24,7 @@ import { faPhone } from '@fortawesome/free-solid-svg-icons';
 
 export class HomeComponent implements AfterViewInit, OnInit {
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object, private ngZone: NgZone, private router: Router, private el: ElementRef, library: FaIconLibrary) {
+  constructor(private propiedadesService: PropiedadesService, @Inject(PLATFORM_ID) private platformId: Object, private ngZone: NgZone, private router: Router, private el: ElementRef, library: FaIconLibrary) {
     // arrancamos el loop fuera de Angular
     this.ngZone.runOutsideAngular(() => this.EmpezarCarrusel());
     library.addIcons(faWhatsapp, faPhone, faFacebook );
@@ -40,6 +40,7 @@ export class HomeComponent implements AfterViewInit, OnInit {
     if (!this.contactSection) return;
 
     const rect = this.contactSection.nativeElement.getBoundingClientRect();
+    
     // Si la sección está visible en viewport
     this.mostrarBotonFlotante = !(rect.top < window.innerHeight && rect.bottom >= 0);
   }  
@@ -59,8 +60,7 @@ export class HomeComponent implements AfterViewInit, OnInit {
   ngOnInit(): void {
     try {
       this.CargarImagenesCarrusel();
-      // Tomamos las primeras 3 propiedades como destacadas
-      this.propiedadesDestacadas = PROPIEDADES_MOCK.slice(0, 3);
+      this.cargarPropiedades();
     } catch (error) {
       throw error;
     }
@@ -81,10 +81,8 @@ export class HomeComponent implements AfterViewInit, OnInit {
 
   //#region Variables
   images: string[] = [];
-
   metricasData: Metrica[] = METRICAS_MOCK;
-
-  propiedadesDestacadas: IPropiedades[] = [];
+  propiedades: Propiedad[] = [];
   selectedMetricInfo: string[] = [];
   
   currentImageIndex = 0;
@@ -94,6 +92,7 @@ export class HomeComponent implements AfterViewInit, OnInit {
   showInfoModal = false;
   showCalculadora = false;
   mostrarBotonFlotante = true;
+  cargando = true;
   //#endregion
 
   //#region Procedimientos
@@ -186,10 +185,23 @@ export class HomeComponent implements AfterViewInit, OnInit {
     this.selectedMetricInfo = [];
   }
 
+  cargarPropiedades(): void {
+    this.cargando = true;
+    this.propiedadesService.getPropiedades().subscribe({
+      next: (data) => {
+        this.propiedades = data;
+        this.cargando = false;
+      },
+      error: (err) => {
+        console.error('Error cargando propiedades', err);
+        this.cargando = false;
+      }
+    });
+  }
+  
   AbrirCalculadora() { this.showCalculadora = true; }
 
   CerrarCalculadora() { this.showCalculadora = false; }
-  
   //#endregion
 
 }

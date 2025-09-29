@@ -1,0 +1,59 @@
+<div class="flex h-screen overflow-hidden">
+  <!-- Spinner overlay -->
+  <div *ngIf="isLoading" class="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
+    <div class="loader border-t-4 border-b-4 border-[#E0A96D] border-solid rounded-full w-16 h-16 animate-spin"></div>
+  </div>
+
+  <!-- Sección Izquierda (Imagen) -->
+  <div class="hidden md:block w-3/4">
+    <img src="assets/images/home/carrusel/04.jpg" alt="Imagen decorativa" class="w-full h-full object-cover">
+  </div>
+
+  <!-- Sección Derecha (Formulario) -->
+  <div class="w-full md:w-1/4 flex items-center justify-center bg-[#ffffff] text-gray-600 p-8">
+    <div class="w-full max-w-sm">
+      
+      <!-- Logo -->
+      <div class="flex flex-col items-center mb-8">
+        <img src="assets/images/home/LOGO ZM.png" alt="Logo Martillero" class="w-36 h-28 object-contain mb-3">
+        <h1 class="text-xl font-bold">Martillero y Corredor Público</h1>
+      </div>
+
+      <!-- Formulario -->
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-5">
+
+        <!-- Usuario -->
+        <div>
+          <label for="email" class="block mb-1">Usuario</label>
+          <input type="email" id="email" formControlName="email"
+            class="w-full px-3 py-2 rounded-md border border-gray-300 text-black focus:outline-none focus:ring-2 focus:ring-[#E0A96D]"
+            placeholder="Ingrese su email" />
+        </div>
+
+        <!-- Contraseña -->
+        <div>
+          <label for="password" class="block mb-1">Contraseña</label>
+          <input type="password" id="password" formControlName="password"
+            class="w-full px-3 py-2 rounded-md border border-gray-300 text-black focus:outline-none focus:ring-2 focus:ring-[#E0A96D]"
+            placeholder="Ingrese su contraseña" />
+        </div>
+
+        <!-- Botón -->
+        <button type="submit" [disabled]="isLoading || loginForm.invalid"
+          class="w-full bg-[#848484] text-[#ffffff] font-semibold py-2 rounded-md hover:bg-[#565656] transition">
+          {{ isLoading ? 'Ingresando...' : 'Ingresar' }}
+        </button>
+      </form>
+
+      <!-- Mensaje de bienvenida -->
+      <div *ngIf="welcomeMessage" class="mt-4 text-center text-green-600 font-semibold">
+        {{ welcomeMessage }}
+      </div>
+
+      <!-- Error -->
+      <div *ngIf="errorMessage" class="mt-4 text-center text-red-400">
+        {{ errorMessage }}
+      </div>
+    </div>
+  </div>
+</div>

@@ -6,6 +6,7 @@ import { PropiedadesComponent } from './components/propiedades/propiedades.compo
 import { ContactoComponent } from './components/contacto/contacto.component';
 import { LayoutComponent } from './components/layout/layout.component';
 import { LoginComponent } from './components/login/login.component';
+import { PropiedadesMenuComponent } from './components/propiedades-menu/propiedades-menu.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -14,5 +15,6 @@ export const routes: Routes = [
   { path: 'contacto', component: ContactoComponent },
   { path: 'layout', component: LayoutComponent },
   { path: 'login', component: LoginComponent },
+  { path: 'menu', component: PropiedadesMenuComponent },
   { path: '**', redirectTo: '' }
 ];

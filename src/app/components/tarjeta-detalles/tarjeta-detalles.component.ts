@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common'
 import { faXmark, faChevronLeft, faChevronRight, faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons';
 import { faWhatsapp } from '@fortawesome/free-brands-svg-icons';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
-import { Propiedad } from '../../../models/propiedades/propiedad.models';
+import { Propiedad } from '../../models/propiedades/propiedad.models';
 
 @Component({
   selector: 'app-tarjeta-detalles',

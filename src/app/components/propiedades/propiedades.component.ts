@@ -1,7 +1,7 @@
 import { AfterViewInit, Component,ElementRef, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common'
-import { TarjetaComponent } from '../tarjeta/tarjeta/tarjeta.component';
-import { TarjetaDetallesComponent } from '../tarjeta-detalles/tarjeta-detalles/tarjeta-detalles.component';
+import { TarjetaComponent } from '../tarjeta/tarjeta.component';
+import { TarjetaDetallesComponent } from '../tarjeta-detalles/tarjeta-detalles.component';
 import { animateOnScroll } from '../../shared/utils/animations';
 import { faCalculator } from '@fortawesome/free-solid-svg-icons';
 import { FaIconLibrary, FontAwesomeModule } from '@fortawesome/angular-fontawesome';

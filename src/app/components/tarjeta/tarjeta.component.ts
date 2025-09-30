@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Propiedad } from '../../../models/propiedades/propiedad.models'; // ajusta la ruta si es necesario
+import { Propiedad } from '../../models/propiedades/propiedad.models'; // ajusta la ruta si es necesario
 
 @Component({
   selector: 'app-tarjeta',

@@ -11,6 +11,8 @@ export class Propiedad {
   subtitulo!: string;
   descripcion?: string;
   direccion?: string;
+
+  //  Datos específicos de inmuebles
   superficieTerreno?: number;
   superficieConstruida?: number;
   superficieResumen!: string;
@@ -19,9 +21,22 @@ export class Propiedad {
   sanitarios?: number;
   cocheras?: number;
   ambientesResumen!: string;
+
+  //  Datos específicos de vehículos
+  marca?: string;
+  modelo?: string;
+  fabricacion?: number;
+  kilometraje?: number;
+  patente?: string;
+
+   // Alquiler
+  serviciosIncluidos?: string;
+
+  //  Datos generales
   esDestacada!: boolean;
   fotos!: FotoPropiedad[];
   tags!: string[];
+
   constructor(init?: Partial<Propiedad>) {
     Object.assign(this, init);
   }
@@ -41,6 +56,19 @@ export class Propiedad {
 
   get sanitario(): number | undefined {
     return this.sanitarios;
+  }
+
+  //  Getter opcional para resumen de vehículo
+  get resumenVehiculo(): string {
+    if (this.marca && this.modelo) {
+      const partes = [
+        `${this.marca} ${this.modelo}`,
+        this.fabricacion ? `(${this.fabricacion})` : "",
+        this.kilometraje ? `- ${this.kilometraje.toLocaleString()} km` : ""
+      ].filter(Boolean);
+      return partes.join(" ");
+    }
+    return "";
   }
   //#endregion
 }

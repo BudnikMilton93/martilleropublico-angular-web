@@ -20,9 +20,15 @@ export class TarjetaComponent {
 
   //#region Getters
   get imagenPrincipal(): string | null {
-    return this.data?.fotos?.length ? this.data.fotos[0].url : null;
-  }
+    if (!this.data?.fotos?.length) return null;
 
+    const fotoPrincipal = this.data.fotos.find(f => f.url || f.file);
+    if (!fotoPrincipal) return null;
+
+    // Si tiene URL la usamos, si no generamos un objectURL temporal
+    return fotoPrincipal.url ?? (fotoPrincipal.file ? URL.createObjectURL(fotoPrincipal.file) : null);
+  }
+  
   get subtitulo(): string {
     const ambientes = this.data.ambientesResumen || '';
     const superficie = this.data.superficieResumen || '';

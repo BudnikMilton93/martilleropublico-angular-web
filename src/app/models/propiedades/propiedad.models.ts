@@ -4,13 +4,15 @@ export class Propiedad {
   id!: number;
   tipoId!: number;
   barrioNombre!: string;
+  idBarrio!: number;
   ciudad!: string;
   provincia!: string;
   barrioCompleto!: string;
   titulo!: string;
   subtitulo!: string;
-  descripcion?: string;
+  descripcion!: string;
   direccion?: string;
+  direccionMaps?: string;
 
   //  Datos específicos de inmuebles
   superficieTerreno?: number;
@@ -43,7 +45,10 @@ export class Propiedad {
 
   //#region Getters "universales"
   get imagenes(): string[] {
-    return this.fotos?.map(f => f.url) || [];
+    if (!this.fotos) return [];
+    return this.fotos
+      .map(f => f.url)        // tomar URL o base64
+      .filter(Boolean) as string[]; // eliminar undefined o null
   }
 
   get ubicacion(): string {

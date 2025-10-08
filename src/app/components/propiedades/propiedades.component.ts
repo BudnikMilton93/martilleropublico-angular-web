@@ -50,36 +50,25 @@ export class PropiedadesComponent implements AfterViewInit, OnInit {
 
   //#region Procedimientos
   OpenModal(propiedad: Propiedad) {
-    this.propiedadSeleccionada = propiedad;
-  }
+  this.propiedadSeleccionada = null; // fuerza reset del ngIf
+  setTimeout(() => {
+    this.propiedadSeleccionada = propiedad ; // copia nueva referencia
+  });
+}
 
   CargarPropiedades() {
-    this.propiedadesService.getPropiedades().subscribe({
-      next: (data) => this.propiedades = data,
-      error: (err) => console.error('Error cargando propiedades', err)
-    });
-  }
+  this.propiedadesService.getPropiedades().subscribe({
+    next: (data) => {
+      this.propiedades = data;
+    },
+    error: (err) => console.error('Error cargando propiedades', err)
+  });
+}
 
   ActivarAnimacion() {
     const section = this.el.nativeElement.querySelector('#propiedades-section');
     animateOnScroll(section);
   }
-
-  // CargarImagenesPropiedad() {
-  //   this.propiedades.forEach((prop, index) => {
-  //     this.BuscarImagenesPropiedad(prop, index);
-  //   });
-  // }
-
-  // private BuscarImagenesPropiedad(prop: IPropiedades, index: number) {
-  //   fetch(`assets/images/propiedades/venta-ChosMalal-elCanalito/ventaChosMalalElCanalito.json`)
-  //     .then(res => res.json())
-  //     .then(data => {
-  //       this.propiedades[index].imagenes = data.imagenes.map(
-  //         (img: string) => `assets/images/propiedades/venta-ChosMalal-elCanalito/${img}`
-  //       );
-  //     });
-  // }
 
   //#endregion
   

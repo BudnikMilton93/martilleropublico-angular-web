@@ -1,10 +1,11 @@
-import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Propiedad } from '../../models/propiedades/propiedad.models';
 import { PropiedadesService } from '../../services/propiedades/propiedades.service';
 import { TipoPropiedad } from '../../models/propiedades/tipoPropiedad';
 import { Barrio, CiudadConBarrios } from '../../models/propiedades/localidades.model';
+import { FotoPropiedad } from '../../models/propiedades/fotosPropiedad.model';
 
 @Component({
   selector: 'app-propiedades-menu-modal',
@@ -23,7 +24,7 @@ export class PropiedadesMenuModalComponent implements OnInit {
 
   // --- Propiedades ---
   tiposPropiedad: TipoPropiedad[] = [];
-  fotos: File[] = [];               // Archivos comprimidos listos para subir
+  fotos: FotoPropiedad[] = [];               // Archivos comprimidos listos para subir
   fotosPreview: string[] = [];      // Miniaturas base64 para mostrar
   MAX_FOTOS = 7;                    // Límite máximo de imágenes
   MAX_WIDTH = 1024;                 // Ancho máximo permitido
@@ -63,11 +64,22 @@ export class PropiedadesMenuModalComponent implements OnInit {
   onGuardar(): void {
     try {
       if (!this.SePuedeGuardar()) {
-        // Si hay errores, no cierres el modal
         return;
+      } else {
+        this.GuardarPropiedad(this.propiedadSeleccionada);
       }    
     } catch (error) {
-      console.error(error);
+      console.log(error);
+      console.error('Error guardando la propiedad:', error);
+      this.mensajeError = 'Ocurrió un error inesperado al guardar la propiedad.';
+    }
+  }
+
+  @HostListener('document:keydown.escape', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent): void {
+    if (event.key === 'Escape' && this.propiedadSeleccionada) {
+      event.preventDefault();
+      this.onCerrar();
     }
   }
   //#endregion 
@@ -105,7 +117,6 @@ export class PropiedadesMenuModalComponent implements OnInit {
       img.src = result;
 
       img.onload = () => {
-        // Escalar imagen principal
         const scale = Math.min(1, this.MAX_WIDTH / img.width); // nunca agrandar
         const canvas = document.createElement('canvas');
         canvas.width = img.width * scale;
@@ -116,19 +127,24 @@ export class PropiedadesMenuModalComponent implements OnInit {
 
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
-        // Convertir a Blob comprimido (JPEG)
         canvas.toBlob(
           blob => {
             if (!blob) return;
 
-            // Crear archivo comprimido listo para guardar
+            // Crear archivo comprimido
             const fileProcesado = new File([blob], file.name, { type: 'image/jpeg' });
-            this.fotos.push(fileProcesado);
 
-            // Crear miniatura para mostrar en pantalla
+            // Agregar al array de fotos como objeto FotoPropiedad
+            const nuevaFoto = new FotoPropiedad({
+              file: fileProcesado,
+              url: result, // base64 para mostrar en preview
+              descripcion: '', // opcional, luego se edita
+              esPrincipal: this.fotos.length === 0, // la primera es principal
+              ordenVisualizacion: this.fotos.length + 1
+            });
+
+            this.fotos.push(nuevaFoto);
             this.GenerarMiniatura(img);
-
-            // Forzar actualización del template
             this.cdr.detectChanges();
           },
           'image/jpeg',
@@ -186,6 +202,15 @@ export class PropiedadesMenuModalComponent implements OnInit {
     // Limpiar barrio seleccionado si ya no pertenece a la ciudad
     if (!this.barriosFiltrados.some(b => b.nombre === this.propiedadSeleccionada.barrioNombre)) {
       this.propiedadSeleccionada.barrioNombre = '';
+      this.propiedadSeleccionada.idBarrio = this.propiedadSeleccionada.idBarrio;
+    }
+  }
+
+  OnBarrioSeleccionado(barrioNombre: string) {
+    const barrio = this.barriosFiltrados.find(b => b.nombre === barrioNombre);
+    if (barrio) {
+      this.propiedadSeleccionada.barrioNombre = barrio.nombre;
+      this.propiedadSeleccionada.idBarrio = barrio.id_barrio; // guardamos el ID para el backend
     }
   }
 
@@ -232,18 +257,6 @@ export class PropiedadesMenuModalComponent implements OnInit {
 
     // Si no hay errores → éxito
     this.mensajeError = '';
-    this.mensajeExito = 'Propiedad guardada correctamente!';
-    
-    // Scroll hacia el mensaje de éxito
-    setTimeout(() => {
-      this.toastExito?.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 0);
-
-    // Reiniciar el modal después de 2 segundos
-    setTimeout(() => {
-      this.LimpiarPropiedad();
-    }, 2000);
-
     return true;
   }
 
@@ -283,17 +296,22 @@ export class PropiedadesMenuModalComponent implements OnInit {
     // Habitaciones, Cocheras, Baños → enteros positivos
     const camposEnteros = [
       { campo: 'Habitaciones', valor: prop.habitaciones },
-      { campo: 'Cocheras', valor: prop.cocheras },
       { campo: 'Baños', valor: prop.sanitario }
     ];
 
     camposEnteros.forEach(c => {
       if (c.valor === undefined || c.valor === null) {
         errores.push(`${c.campo}`);
-      } else if (!Number.isInteger(Number(c.valor)) || Number(c.valor) < 0) {
+      } else if (!Number.isInteger(Number(c.valor)) || Number(c.valor) <= 0) {
         errores.push(`${c.campo} debe ser un número entero válido`);
       }
     });
+
+    if (prop.cocheras !== undefined && prop.cocheras !== null && prop.cocheras) {
+      if (!Number.isInteger(Number(prop.cocheras)) || Number(prop.cocheras) < 0) {
+        errores.push(`Cocheras debe ser un número entero válido`);
+      }
+    }
 
     // Antigüedad → entero (años)
     if (prop.antiguedad === undefined || prop.antiguedad === null) {
@@ -449,7 +467,72 @@ export class PropiedadesMenuModalComponent implements OnInit {
     this.fotos = [];               
     this.fotosPreview = []; 
   }
- 
+  
+  private PrepararPropiedad(propiedad: Propiedad, fotos: FotoPropiedad[]) {
+    const formData = new FormData();
+
+    formData.append('Titulo', propiedad.titulo);
+    formData.append('Subtitulo', propiedad.subtitulo);
+    formData.append('tipoId', propiedad.tipoId.toString());
+    formData.append('Descripcion', propiedad.descripcion);
+    formData.append('Barrio', propiedad.idBarrio.toString());
+    formData.append('Ciudad', propiedad.ciudad);
+    formData.append('Provincia', propiedad.provincia);
+
+    switch (propiedad.tipoId) {
+      case 1:
+        if (propiedad.habitaciones) formData.append('Habitaciones', propiedad.habitaciones.toString());
+        if (propiedad.cocheras) formData.append('Cocheras', propiedad.cocheras.toString());
+        if (propiedad.sanitarios) formData.append('Sanitario', propiedad.sanitarios.toString());
+        if (propiedad.superficieConstruida) formData.append('Superficie Construida', propiedad.superficieConstruida.toString());
+        if (propiedad.superficieTerreno) formData.append('Superficie Terreno', propiedad.superficieTerreno.toString());
+        if (propiedad.antiguedad) formData.append('Antiguedad', propiedad.antiguedad.toString());
+        break;
+      case 2:
+        if (propiedad.superficieTerreno) formData.append('Superficie Terreno', propiedad.superficieTerreno.toString());
+        break;
+      case 3:
+        if (propiedad.marca) formData.append('Marca', propiedad.marca.toString());
+        if (propiedad.modelo) formData.append('Modelo', propiedad.modelo.toString());
+        if (propiedad.fabricacion) formData.append('Fabricacion', propiedad.fabricacion.toString());
+        if (propiedad.kilometraje) formData.append('Kilometraje', propiedad.kilometraje.toString());
+        if (propiedad.patente) formData.append('Patente', propiedad.patente.toString());
+        break;
+      case 4:
+        if (propiedad.habitaciones) formData.append('Habitaciones', propiedad.habitaciones.toString());
+        if (propiedad.cocheras) formData.append('Cocheras', propiedad.cocheras.toString());
+        if (propiedad.sanitarios) formData.append('Sanitario', propiedad.sanitarios.toString());
+        if (propiedad.serviciosIncluidos) formData.append('Servicios', propiedad.serviciosIncluidos.toString());
+    }
+    
+    fotos.forEach((foto, index) => {
+    if (foto.file) {
+      formData.append(`Fotos`, foto.file, foto.file.name);
+      if (foto.descripcion)
+        formData.append(`Descripciones[${index}]`, foto.descripcion);
+      if (foto.esPrincipal)
+        formData.append(`EsPrincipal[${index}]`, foto.esPrincipal.toString());
+      if (foto.ordenVisualizacion)
+        formData.append(`Orden[${index}]`, foto.ordenVisualizacion.toString());
+    }
+  });
+
+    return formData;
+  }
+
+  private GuardarPropiedad(propiedad: Propiedad) {
+    const formData = this.PrepararPropiedad(propiedad, this.fotos);
+
+    this.propiedadesService.guardarPropiedad(formData).subscribe({
+      next: () => {
+        this.mensajeExito = 'Propiedad guardada correctamente!';
+        this.toastExito?.nativeElement.scrollIntoView({ behavior: 'smooth' });
+
+        setTimeout(() => this.LimpiarPropiedad(), 2000);
+      },
+      error: (err) => console.error('Error guardando propiedad', err)
+    });
+}
   //#endregion
 
 }

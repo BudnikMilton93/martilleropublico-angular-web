@@ -27,4 +27,8 @@ export class PropiedadesService {
     return this.api.get<CiudadConBarrios[]>(`${this.endpoint}/obtenerLocalidades`);
   }
 
+  guardarPropiedad(formData: FormData): Observable<any> {
+    return this.api.post(`${this.endpoint}/guardarPropiedad`, formData);
+  }
+
 }

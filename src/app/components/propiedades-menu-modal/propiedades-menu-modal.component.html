@@ -87,6 +87,7 @@
         <div class="flex-[1] md:flex-[1] mt-2 md:mt-0 relative">
           <label class="block text-sm font-medium mb-1">Barrio</label>
           <select [(ngModel)]="propiedadSeleccionada.barrioNombre" name="barrio"
+            (ngModelChange)="OnBarrioSeleccionado($event)"
             class="w-full border rounded px-3 py-2 bg-white focus:ring-2 focus:ring-gray-700 focus:outline-none shadow-sm focus:shadow-md transition-all duration-200 appearance-none"
             [disabled]="!!propiedadSeleccionada.id">
             <option [ngValue]="null" disabled>Seleccione barrio</option>
@@ -156,17 +157,20 @@
           <div class="flex-1">
             <label class="block text-sm font-medium mb-1">Habitaciones</label>
             <input type="number" [(ngModel)]="propiedadSeleccionada.habitaciones" name="habitaciones"
-              class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-gray-700 focus:outline-none shadow-sm focus:shadow-md transition-all duration-200" />
+              class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-gray-700 focus:outline-none shadow-sm focus:shadow-md transition-all duration-200"
+              placeholder="Ej: 3" />
           </div>
           <div class="flex-1 mt-2 md:mt-0">
             <label class="block text-sm font-medium mb-1">Cocheras</label>
             <input type="number" [(ngModel)]="propiedadSeleccionada.cocheras" name="cocheras"
-              class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-gray-700 focus:outline-none shadow-sm focus:shadow-md transition-all duration-200" />
+              class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-gray-700 focus:outline-none shadow-sm focus:shadow-md transition-all duration-200" 
+              placeholder="Ej: 1"/>
           </div>
           <div class="flex-1 mt-2 md:mt-0">
             <label class="block text-sm font-medium mb-1">Baños</label>
             <input type="number" [(ngModel)]="propiedadSeleccionada.sanitarios" name="sanitarios"
-              class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-gray-700 focus:outline-none shadow-sm focus:shadow-md transition-all duration-200" />
+              class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-gray-700 focus:outline-none shadow-sm focus:shadow-md transition-all duration-200" 
+              placeholder="Ej: 1"/>
           </div>
         </div>
 
@@ -174,17 +178,21 @@
           <div class="flex-1">
             <label class="block text-sm font-medium mb-1">Superficie Construida (m²)</label>
             <input type="number" [(ngModel)]="propiedadSeleccionada.superficieConstruida" name="superficieConstruida"
-              class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-gray-700 focus:outline-none shadow-sm focus:shadow-md transition-all duration-200" />
+              class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-gray-700 focus:outline-none shadow-sm focus:shadow-md transition-all duration-200" 
+              placeholder="Ej: 120,50"/>
           </div>
           <div class="flex-1 mt-2 md:mt-0">
             <label class="block text-sm font-medium mb-1">Superficie del Terreno (m²)</label>
             <input type="number" [(ngModel)]="propiedadSeleccionada.superficieTerreno" name="superficieTerreno"
-              class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-gray-700 focus:outline-none shadow-sm focus:shadow-md transition-all duration-200" />
+              class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-gray-700 focus:outline-none shadow-sm focus:shadow-md transition-all duration-200" 
+              placeholder="Ej: 300"/>
           </div>
           <div class="flex-1 mt-2 md:mt-0">
             <label class="block text-sm font-medium mb-1">Antigüedad (años)</label>
             <input type="number" [(ngModel)]="propiedadSeleccionada.antiguedad" name="antiguedad"
-              class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-gray-700 focus:outline-none shadow-sm focus:shadow-md transition-all duration-200" />
+              class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-gray-700 focus:outline-none shadow-sm focus:shadow-md transition-all duration-200"
+              placeholder="Ej: 10"/>
+
           </div>
         </div>
       </div>
@@ -195,12 +203,12 @@
           <div class="flex-1">
             <label class="block text-sm font-medium mb-1">Superficie del Terreno (m²)</label>
             <input type="number" [(ngModel)]="propiedadSeleccionada.superficieTerreno" name="superficieTerreno" class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-gray-700
-                          focus:outline-none shadow-sm focus:shadow-md transition-all duration-200" />
+                          focus:outline-none shadow-sm focus:shadow-md transition-all duration-200" placeholder="Ej: 300" />
           </div>
         </div>
 
         <p class="text-sm text-gray-500">
-          *El resto de la información (dimensiones, servicios, ubicación, etc.) puede detallarse en la descripción.
+          *El resto de la información (dimensiones, servicios, etc.) puede detallarse en la descripción.
         </p>
       </div>
 
@@ -210,13 +218,15 @@
           <div class="flex-1">
             <label class="block text-sm font-medium mb-1">Marca</label>
             <input type="text" [(ngModel)]="propiedadSeleccionada.marca" name="marca"
-              class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-gray-700 focus:outline-none shadow-sm focus:shadow-md transition-all duration-200" />
+              class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-gray-700 focus:outline-none shadow-sm focus:shadow-md transition-all duration-200"
+              placeholder="Ej: Toyota" />
           </div>
 
           <div class="flex-1 mt-2 md:mt-0">
             <label class="block text-sm font-medium mb-1">Modelo</label>
             <input type="text" [(ngModel)]="propiedadSeleccionada.modelo" name="modelo"
-              class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-gray-700 focus:outline-none shadow-sm focus:shadow-md transition-all duration-200" />
+              class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-gray-700 focus:outline-none shadow-sm focus:shadow-md transition-all duration-200"
+              placeholder="Ej: Corolla" />
           </div>
         </div>
 
@@ -224,13 +234,15 @@
           <div class="flex-1">
             <label class="block text-sm font-medium mb-1">Año de fabricación</label>
             <input type="number" [(ngModel)]="propiedadSeleccionada.fabricacion" name="fabricacion"
-              class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-gray-700 focus:outline-none shadow-sm focus:shadow-md transition-all duration-200" />
+              class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-gray-700 focus:outline-none shadow-sm focus:shadow-md transition-all duration-200" 
+              placeholder="Ej: 2015"/>
           </div>
 
           <div class="flex-1 mt-2 md:mt-0">
             <label class="block text-sm font-medium mb-1">Kilometraje</label>
             <input type="number" [(ngModel)]="propiedadSeleccionada.kilometraje" name="kilometraje"
-              class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-gray-700 focus:outline-none shadow-sm focus:shadow-md transition-all duration-200" />
+              class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-gray-700 focus:outline-none shadow-sm focus:shadow-md transition-all duration-200" 
+              placeholder="Ej: 10000"/>
           </div>
 
           <div class="flex-1 mt-2 md:mt-0">
@@ -248,20 +260,23 @@
           <div>
             <label class="block text-sm font-medium mb-1">Superficie cubierta (m²)</label>
             <input type="number" [(ngModel)]="propiedadSeleccionada.superficieConstruida"
-              class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-gray-700 focus:outline-none shadow-sm focus:shadow-md transition-all duration-200" />
+              class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-gray-700 focus:outline-none shadow-sm focus:shadow-md transition-all duration-200" 
+              placeholder="Ej: 150"/>
           </div>
 
           <div>
             <label class="block text-sm font-medium mb-1">Habitaciones</label>
             <input type="number" [(ngModel)]="propiedadSeleccionada.habitaciones"
-              class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-gray-700 focus:outline-none shadow-sm focus:shadow-md transition-all duration-200" />
+              class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-gray-700 focus:outline-none shadow-sm focus:shadow-md transition-all duration-200"
+              placeholder="Ej: 2" />
           </div>
 
           <div>
             <label class="block text-sm font-medium mb-1">Sanitarios</label>
             <input type="number" [(ngModel)]="propiedadSeleccionada.sanitarios"
-              class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-gray-700 focus:outline-none shadow-sm focus:shadow-md transition-all duration-200" />
-          </div>
+              class="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-gray-700 focus:outline-none shadow-sm focus:shadow-md transition-all duration-200"
+              placeholder="Ej: 1" />              
+            </div>
 
           <div>
             <label class="block text-sm font-medium mb-1">Servicios incluidos</label>

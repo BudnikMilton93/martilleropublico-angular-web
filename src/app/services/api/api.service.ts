@@ -34,4 +34,18 @@ export class ApiService {
   delete<T>(endpoint: string): Observable<T> {
     return this.http.delete<T>(`${this.baseUrl}${endpoint}`);
   }
+
+  postFormData<T>(endpoint: string, body: any, json: boolean = true): Observable<T> {
+  // Si el body es una instancia de FormData, no seteamos headers manualmente
+  if (body instanceof FormData) {
+    return this.http.post<T>(`${this.baseUrl}${endpoint}`, body);
+  }
+
+  // Caso normal JSON o x-www-form-urlencoded
+  const headers = json
+    ? new HttpHeaders({ 'Content-Type': 'application/json' })
+    : new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' });
+
+  return this.http.post<T>(`${this.baseUrl}${endpoint}`, body, { headers });
+}
 }

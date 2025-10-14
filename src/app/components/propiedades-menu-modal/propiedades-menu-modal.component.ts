@@ -67,7 +67,7 @@ export class PropiedadesMenuModalComponent implements OnInit {
         return;
       } else {
         this.GuardarPropiedad(this.propiedadSeleccionada);
-      }    
+      }
     } catch (error) {
       console.log(error);
       console.error('Error guardando la propiedad:', error);
@@ -223,7 +223,7 @@ export class PropiedadesMenuModalComponent implements OnInit {
 
     // Determinar tipo de propiedad y validar campos específicos
     const tipo = this.tiposPropiedad.find(t => t.tipoId === this.propiedadSeleccionada.tipoId)?.tipoId;
-      
+
     switch (tipo) {
       case 1: // Casa
         errores = errores.concat(this.ValidarCamposCasa(this.propiedadSeleccionada));
@@ -336,7 +336,7 @@ export class PropiedadesMenuModalComponent implements OnInit {
 
     return errores;
   }
-  
+
   private ValidarCamposTerreno(prop: Propiedad): string[] {
     const errores: string[] = [];
 
@@ -464,65 +464,72 @@ export class PropiedadesMenuModalComponent implements OnInit {
     this.mensajeError = '';
     this.mensajeExito = '';
 
-    this.fotos = [];               
-    this.fotosPreview = []; 
+    this.fotos = [];
+    this.fotosPreview = [];
   }
-  
+
   private PrepararPropiedad(propiedad: Propiedad, fotos: FotoPropiedad[]) {
     const formData = new FormData();
 
-    formData.append('Titulo', propiedad.titulo);
-    formData.append('Subtitulo', propiedad.subtitulo);
+    formData.append('titulo', propiedad.titulo);
+    formData.append('subtitulo', propiedad.subtitulo);
     formData.append('tipoId', propiedad.tipoId.toString());
-    formData.append('Descripcion', propiedad.descripcion);
-    formData.append('Barrio', propiedad.idBarrio.toString());
-    formData.append('Ciudad', propiedad.ciudad);
-    formData.append('Provincia', propiedad.provincia);
+    formData.append('descripcion', propiedad.descripcion);
+    formData.append('idBarrio', propiedad.idBarrio.toString());
+    formData.append('ciudad', propiedad.ciudad); 
+    formData.append('direccionMaps', propiedad.direccion); 
+
+    propiedad.terreno = propiedad.superficieTerreno?.toString();
+    propiedad.construida = propiedad.superficieConstruida?.toString();
 
     switch (propiedad.tipoId) {
       case 1:
-        if (propiedad.habitaciones) formData.append('Habitaciones', propiedad.habitaciones.toString());
-        if (propiedad.cocheras) formData.append('Cocheras', propiedad.cocheras.toString());
-        if (propiedad.sanitarios) formData.append('Sanitario', propiedad.sanitarios.toString());
-        if (propiedad.superficieConstruida) formData.append('Superficie Construida', propiedad.superficieConstruida.toString());
-        if (propiedad.superficieTerreno) formData.append('Superficie Terreno', propiedad.superficieTerreno.toString());
-        if (propiedad.antiguedad) formData.append('Antiguedad', propiedad.antiguedad.toString());
+        if (propiedad.habitaciones) formData.append('habitaciones', propiedad.habitaciones.toString());
+        if (propiedad.cocheras) formData.append('cocheras', propiedad.cocheras.toString());
+        if (propiedad.sanitarios) formData.append('sanitarios', propiedad.sanitarios.toString());
+        if (propiedad.superficieConstruida) formData.append('superficieConstruida', propiedad.construida);
+        if (propiedad.superficieTerreno) formData.append('superficieTerreno', propiedad.terreno);
+        if (propiedad.antiguedad) formData.append('antiguedad', propiedad.antiguedad.toString());
         break;
       case 2:
-        if (propiedad.superficieTerreno) formData.append('Superficie Terreno', propiedad.superficieTerreno.toString());
+        if (propiedad.superficieTerreno) formData.append('superficieTerreno', propiedad.terreno);
         break;
       case 3:
-        if (propiedad.marca) formData.append('Marca', propiedad.marca.toString());
-        if (propiedad.modelo) formData.append('Modelo', propiedad.modelo.toString());
-        if (propiedad.fabricacion) formData.append('Fabricacion', propiedad.fabricacion.toString());
-        if (propiedad.kilometraje) formData.append('Kilometraje', propiedad.kilometraje.toString());
-        if (propiedad.patente) formData.append('Patente', propiedad.patente.toString());
+        if (propiedad.marca) formData.append('marca', propiedad.marca.toString());
+        if (propiedad.modelo) formData.append('modelo', propiedad.modelo.toString());
+        if (propiedad.fabricacion) formData.append('fabricacion', propiedad.fabricacion.toString());
+        if (propiedad.kilometraje) formData.append('kilometraje', propiedad.kilometraje.toString());
+        if (propiedad.patente) formData.append('patente', propiedad.patente.toString());
         break;
       case 4:
-        if (propiedad.habitaciones) formData.append('Habitaciones', propiedad.habitaciones.toString());
-        if (propiedad.cocheras) formData.append('Cocheras', propiedad.cocheras.toString());
-        if (propiedad.sanitarios) formData.append('Sanitario', propiedad.sanitarios.toString());
-        if (propiedad.serviciosIncluidos) formData.append('Servicios', propiedad.serviciosIncluidos.toString());
+        if (propiedad.habitaciones) formData.append('habitaciones', propiedad.habitaciones.toString());
+        if (propiedad.cocheras) formData.append('cocheras', propiedad.cocheras.toString());
+        if (propiedad.sanitarios) formData.append('sanitarios', propiedad.sanitarios.toString());
+        if (propiedad.serviciosIncluidos) formData.append('serviciosIncluidos', propiedad.serviciosIncluidos.toString());
+        if (propiedad.superficieConstruida) formData.append('superficieConstruida', propiedad.construida);
     }
-    
-    fotos.forEach((foto, index) => {
-    if (foto.file) {
-      formData.append(`Fotos`, foto.file, foto.file.name);
-      if (foto.descripcion)
-        formData.append(`Descripciones[${index}]`, foto.descripcion);
-      if (foto.esPrincipal)
-        formData.append(`EsPrincipal[${index}]`, foto.esPrincipal.toString());
-      if (foto.ordenVisualizacion)
-        formData.append(`Orden[${index}]`, foto.ordenVisualizacion.toString());
-    }
-  });
+
+    const fotosDTO = fotos.map((f, i) => ({
+      id: f.id || 0,
+      descripcion: f.descripcion || '',
+      ordenVisualizacion: i,
+      esPrincipal: (f as any).esPrincipal || false,
+    }));
+    formData.append('fotos', JSON.stringify(fotosDTO));  // esto va a [FromForm] string fotos
+
+    fotos.forEach(foto => {
+      if ((foto as any).file instanceof File) {
+        formData.append('archivos', (foto as any).file, (foto as any).file.name); // esto va a [FromForm] List<IFormFile> archivos
+      }
+    });
 
     return formData;
   }
 
+
   private GuardarPropiedad(propiedad: Propiedad) {
     const formData = this.PrepararPropiedad(propiedad, this.fotos);
-
+    console.log(formData);
     this.propiedadesService.guardarPropiedad(formData).subscribe({
       next: () => {
         this.mensajeExito = 'Propiedad guardada correctamente!';
@@ -532,7 +539,7 @@ export class PropiedadesMenuModalComponent implements OnInit {
       },
       error: (err) => console.error('Error guardando propiedad', err)
     });
-}
+  }
   //#endregion
 
 }

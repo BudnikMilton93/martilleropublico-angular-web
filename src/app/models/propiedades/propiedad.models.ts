@@ -11,12 +11,14 @@ export class Propiedad {
   titulo!: string;
   subtitulo!: string;
   descripcion!: string;
-  direccion?: string;
-  direccionMaps?: string;
+  direccion!: string;
+  direccionMaps!: string;
 
   //  Datos específicos de inmuebles
-  superficieTerreno?: number;
-  superficieConstruida?: number;
+  superficieTerreno!: number;
+  terreno?: string;
+  construida?: string;
+  superficieConstruida!: number;
   superficieResumen!: string;
   antiguedad?: number;
   habitaciones?: number;

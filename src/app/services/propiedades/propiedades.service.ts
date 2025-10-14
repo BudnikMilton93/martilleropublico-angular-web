@@ -28,7 +28,7 @@ export class PropiedadesService {
   }
 
   guardarPropiedad(formData: FormData): Observable<any> {
-    return this.api.post(`${this.endpoint}/guardarPropiedad`, formData);
+    return this.api.postFormData(`${this.endpoint}/guardarPropiedad`, formData);
   }
 
 }

@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, EventEmitter, HostListener, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Propiedad } from '../../models/propiedades/propiedad.models';
@@ -6,44 +6,65 @@ import { PropiedadesService } from '../../services/propiedades/propiedades.servi
 import { TipoPropiedad } from '../../models/propiedades/tipoPropiedad';
 import { Barrio, CiudadConBarrios } from '../../models/propiedades/localidades.model';
 import { FotoPropiedad } from '../../models/propiedades/fotosPropiedad.model';
+import { faSave, faCancel } from '@fortawesome/free-solid-svg-icons';
+import { FaIconLibrary, FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @Component({
   selector: 'app-propiedades-menu-modal',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, FontAwesomeModule],
   templateUrl: './propiedades-menu-modal.component.html',
   styleUrls: ['./propiedades-menu-modal.component.scss']
 })
 
-export class PropiedadesMenuModalComponent implements OnInit {
+export class PropiedadesMenuModalComponent implements OnInit, OnChanges {
   @Input() propiedadSeleccionada!: Propiedad;
+  @Input() esEdicion = false;
   @Output() cerrar = new EventEmitter<void>();
   @Output() guardar = new EventEmitter<Propiedad>();
   @ViewChild('toastError') toastError!: ElementRef;
   @ViewChild('toastExito') toastExito!: ElementRef;
 
   // --- Propiedades ---
+  public faSave = faSave;
   tiposPropiedad: TipoPropiedad[] = [];
-  fotos: FotoPropiedad[] = [];               // Archivos comprimidos listos para subir
-  fotosPreview: string[] = [];      // Miniaturas base64 para mostrar
-  MAX_FOTOS = 7;                    // Límite máximo de imágenes
-  MAX_WIDTH = 1024;                 // Ancho máximo permitido
-  MINIATURA_WIDTH = 200;            // Tamaño miniatura
-  JPEG_QUALITY = 0.8;               // Compresión JPEG
+  fotos: FotoPropiedad[] = [];               // Archivos nuevos listos para subir
+  fotosPreview: string[] = [];               // Miniaturas base64 para preview de fotos NUEVAS
+  fotosOriginales: FotoPropiedad[] = [];     //  COPIA del estado original (fotos guardadas)
+  MAX_FOTOS = 7;
+  MAX_WIDTH = 1024;
+  MINIATURA_WIDTH = 200;
+  JPEG_QUALITY = 0.8;
   mensajeError: string = '';
   mensajeExito: string = '';
 
   // Lista de ciudades con sus barrios
   ciudadesConBarrios: CiudadConBarrios[] = [];
-
-  // Barrios filtrados según la ciudad seleccionada
   barriosFiltrados: Barrio[] = [];
 
-  constructor(private propiedadesService: PropiedadesService, private cdr: ChangeDetectorRef) {
+  constructor(library: FaIconLibrary, private propiedadesService: PropiedadesService, private cdr: ChangeDetectorRef) { 
+    library.addIcons(faSave, faCancel);
   }
 
+  // Getter que calcula el total de fotos (existentes + nuevas)
+  get totalFotos(): number {
+    const fotosExistentes = this.propiedadSeleccionada?.fotos?.length || 0;
+    const fotosNuevas = this.fotos.length;
+    return fotosExistentes + fotosNuevas;
+  }
+
+  // Verifica si se alcanzó el máximo
   get maxFotosAlcanzado(): boolean {
-    return this.fotos.length >= this.MAX_FOTOS;
+    return this.totalFotos >= this.MAX_FOTOS;
+  }
+
+  // Combina fotos guardadas en S3 y fotos nuevas cargadas
+  get fotosTotales(): string[] {
+    const guardadas = (this.propiedadSeleccionada?.fotos || [])
+      .map(f => f.rutaArchivo)
+      .filter((r): r is string => !!r);
+
+    return [...guardadas, ...this.fotosPreview];
   }
 
   //#region "Eventos"
@@ -51,18 +72,41 @@ export class PropiedadesMenuModalComponent implements OnInit {
     try {
       this.ObtenerTiposPropiedad();
       this.ObtenerCiudadesYBarrios();
+
+      // Guardar copia del estado original de las fotos
+      if (this.propiedadSeleccionada?.fotos) {
+        this.fotosOriginales = JSON.parse(JSON.stringify(this.propiedadSeleccionada.fotos));
+      }
     } catch (error) {
       throw error;
     }
   }
 
+  // Se ejecuta cada vez que cambia el @Input() propiedadSeleccionada
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['propiedadSeleccionada'] && this.propiedadSeleccionada) {
+      // Guardar copia del estado original de las fotos
+      this.GuardarEstadoOriginal();
+      
+      // Limpiar fotos nuevas al abrir el modal
+      this.fotos = [];
+      this.fotosPreview = [];
+    }
+  }
+
   onCerrar(): void {
+    //  Restaurar fotos originales al cancelar
+    if (this.fotosOriginales.length > 0) {
+      this.propiedadSeleccionada.fotos = JSON.parse(JSON.stringify(this.fotosOriginales));
+    }
+
     this.LimpiarPropiedad();
     this.cerrar.emit();
   }
 
   onGuardar(): void {
     try {
+      debugger;
       if (!this.SePuedeGuardar()) {
         return;
       } else {
@@ -84,40 +128,73 @@ export class PropiedadesMenuModalComponent implements OnInit {
   }
   //#endregion 
 
+  private GuardarEstadoOriginal(): void {
+    if (this.propiedadSeleccionada?.fotos) {
+      this.fotosOriginales = JSON.parse(JSON.stringify(this.propiedadSeleccionada.fotos));
+    } else {
+      this.fotosOriginales = [];
+    }
+  }
 
-  //#region "Procedimientos"
-
+  //  Seleccionar fotos con validación correcta
   SeleccionarFotos(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (!input.files) return;
 
     const archivos = Array.from(input.files);
 
-    archivos.forEach(file => {
-      if (this.fotos.length >= this.MAX_FOTOS) return;
-      this.ProcesarImagen(file);
-    });
+    //  Validar límite total (existentes + nuevas)
+    if (this.totalFotos >= this.MAX_FOTOS) {
+      this.mensajeError = `Ya alcanzaste el máximo de ${this.MAX_FOTOS} fotos permitidas.`;
+      setTimeout(() => this.mensajeError = '', 3000);
+      input.value = '';
+      return;
+    }
 
+    //  Calcular cuántas fotos se pueden agregar
+    const espacioDisponible = this.MAX_FOTOS - this.totalFotos;
+    const archivosPermitidos = archivos.slice(0, espacioDisponible);
+
+    // Si se intentaron cargar más de las permitidas, avisar
+    if (archivos.length > espacioDisponible) {
+      this.mensajeError = `Solo puedes agregar ${espacioDisponible} foto(s) más. Máximo: ${this.MAX_FOTOS} fotos.`;
+      setTimeout(() => this.mensajeError = '', 3000);
+    }
+
+    archivosPermitidos.forEach(file => this.ProcesarImagen(file));
     input.value = '';
   }
 
+  // Elimina una foto, ya sea de las guardadas o nuevas
   QuitarFoto(index: number): void {
-    this.fotos.splice(index, 1);
-    this.fotosPreview.splice(index, 1);
+    const guardadasCount = this.propiedadSeleccionada?.fotos?.length || 0;
+
+    if (index < guardadasCount) {
+      // Foto guardada en BD → eliminar de la lista
+      this.propiedadSeleccionada!.fotos.splice(index, 1);
+    } else {
+      // Foto nueva (preview) → eliminar del array de nuevas
+      const previewIndex = index - guardadasCount;
+      this.fotosPreview.splice(previewIndex, 1);
+      this.fotos.splice(previewIndex, 1);
+    }
   }
 
   private ProcesarImagen(file: File): void {
     const reader = new FileReader();
 
     reader.onload = (e: ProgressEvent<FileReader>) => {
-      const result = e.target?.result as string;
+      const result = e.target?.result as string | null;
       if (!result) return;
 
       const img = new Image();
       img.src = result;
 
       img.onload = () => {
-        const scale = Math.min(1, this.MAX_WIDTH / img.width); // nunca agrandar
+        // Escala máxima (no agrandar imágenes)
+        const scale = Math.min(1, this.MAX_WIDTH / img.width);
+
+        // Crear canvas proporcional
         const canvas = document.createElement('canvas');
         canvas.width = img.width * scale;
         canvas.height = img.height * scale;
@@ -125,42 +202,51 @@ export class PropiedadesMenuModalComponent implements OnInit {
         const ctx = canvas.getContext('2d');
         if (!ctx) return;
 
+        // Dibujar imagen escalada
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
+        // Generar blob comprimido
         canvas.toBlob(
           blob => {
             if (!blob) return;
 
-            // Crear archivo comprimido
+            // Crear archivo comprimido JPEG
             const fileProcesado = new File([blob], file.name, { type: 'image/jpeg' });
 
-            // Agregar al array de fotos como objeto FotoPropiedad
+            // Crear objeto FotoPropiedad
             const nuevaFoto = new FotoPropiedad({
               file: fileProcesado,
-              url: result, // base64 para mostrar en preview
-              descripcion: '', // opcional, luego se edita
-              esPrincipal: this.fotos.length === 0, // la primera es principal
-              ordenVisualizacion: this.fotos.length + 1
+              rutaArchivo: '', // Se llenará al subir
+              descripcion: '',
+              esPrincipal: this.totalFotos === 0, // primera imagen = principal
+              ordenVisualizacion: this.totalFotos + 1
             });
 
             this.fotos.push(nuevaFoto);
+
+            // Generar miniatura para preview
             this.GenerarMiniatura(img);
+
             this.cdr.detectChanges();
           },
           'image/jpeg',
           this.JPEG_QUALITY
         );
       };
+
+      img.onerror = () => console.error('Error al cargar la imagen');
     };
 
+    reader.onerror = () => console.error('Error al leer el archivo');
     reader.readAsDataURL(file);
   }
 
+  //Generar miniatura optimizada
   private GenerarMiniatura(img: HTMLImageElement): void {
-    const canvasMini = document.createElement('canvas');
-    const scaleMini = this.MINIATURA_WIDTH / img.width;
+    const scaleMini = Math.min(1, this.MINIATURA_WIDTH / img.width);
 
-    canvasMini.width = this.MINIATURA_WIDTH;
+    const canvasMini = document.createElement('canvas');
+    canvasMini.width = img.width * scaleMini;
     canvasMini.height = img.height * scaleMini;
 
     const ctxMini = canvasMini.getContext('2d');
@@ -168,17 +254,19 @@ export class PropiedadesMenuModalComponent implements OnInit {
 
     ctxMini.drawImage(img, 0, 0, canvasMini.width, canvasMini.height);
 
+    // Base64 de miniatura para preview
     const urlMini = canvasMini.toDataURL('image/jpeg', this.JPEG_QUALITY);
     this.fotosPreview.push(urlMini);
   }
+
+  //#region "Procedimientos"
 
   private ObtenerTiposPropiedad() {
     this.propiedadesService.getTiposPropiedad().subscribe({
       next: (data) => {
         this.tiposPropiedad = data;
       },
-      error: () => {
-      }
+      error: () => { }
     });
   }
 
@@ -199,7 +287,6 @@ export class PropiedadesMenuModalComponent implements OnInit {
   FiltrarBarrios(ciudad: string) {
     const ciudadObj = this.ciudadesConBarrios.find(c => c.ciudad === ciudad);
     this.barriosFiltrados = ciudadObj ? ciudadObj.barrios : [];
-    // Limpiar barrio seleccionado si ya no pertenece a la ciudad
     if (!this.barriosFiltrados.some(b => b.nombre === this.propiedadSeleccionada.barrioNombre)) {
       this.propiedadSeleccionada.barrioNombre = '';
       this.propiedadSeleccionada.idBarrio = this.propiedadSeleccionada.idBarrio;
@@ -210,81 +297,57 @@ export class PropiedadesMenuModalComponent implements OnInit {
     const barrio = this.barriosFiltrados.find(b => b.nombre === barrioNombre);
     if (barrio) {
       this.propiedadSeleccionada.barrioNombre = barrio.nombre;
-      this.propiedadSeleccionada.idBarrio = barrio.id_barrio; // guardamos el ID para el backend
+      this.propiedadSeleccionada.idBarrio = barrio.id_barrio;
     }
   }
 
   private SePuedeGuardar(): boolean {
     if (!this.propiedadSeleccionada) return false;
 
-    // Validar primero los campos genéricos
     const erroresGenericos = this.ValidarCamposGenericos(this.propiedadSeleccionada);
     let errores: string[] = [...erroresGenericos];
 
-    // Determinar tipo de propiedad y validar campos específicos
     const tipo = this.tiposPropiedad.find(t => t.tipoId === this.propiedadSeleccionada.tipoId)?.tipoId;
 
     switch (tipo) {
-      case 1: // Casa
+      case 1:
         errores = errores.concat(this.ValidarCamposCasa(this.propiedadSeleccionada));
         break;
-
-      case 2: // Terreno
+      case 2:
         errores = errores.concat(this.ValidarCamposTerreno(this.propiedadSeleccionada));
         break;
-
-      case 3: // Vehículo
+      case 3:
         errores = errores.concat(this.ValidarCamposVehiculo(this.propiedadSeleccionada));
         break;
-
-      case 4: // Alquiler
+      case 4:
         errores = errores.concat(this.ValidarCamposAlquiler(this.propiedadSeleccionada));
         break;
     }
 
-    // Si hay errores, mostrar mensaje y hacer scroll
     if (errores.length > 0) {
       this.mensajeError = 'Faltan completar o corregir los siguientes campos: ' + errores.join(', ');
-      this.mensajeExito = ''; // limpiar mensaje anterior, si había
-
-      // Desplazar el modal hacia el mensaje de error
-      setTimeout(() => {
-        this.toastError?.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 0);
+      this.mensajeExito = '';
 
       return false;
     }
 
-    // Si no hay errores → éxito
     this.mensajeError = '';
     return true;
   }
 
-  // Devuelve array de mensajes de error (vacío si todo OK)
   private ValidarCamposGenericos(prop: Propiedad): string[] {
     const errores: string[] = [];
 
-    // Título y Subtítulo
     if (!prop.titulo?.trim()) errores.push('Título');
     if (!prop.subtitulo?.trim()) errores.push('Subtítulo');
-
-    // Tipo de propiedad
     if (!prop.tipoId) errores.push('Tipo de propiedad');
-
-    // Descripción
     if (!prop.descripcion?.trim()) errores.push('Descripción');
-
-    // Ciudad, Barrio y Dirección (selects / inputs)
     if (!prop.ciudad) errores.push('Ciudad');
     if (!prop.barrioNombre) errores.push('Barrio');
     if (!prop.direccion?.trim()) errores.push('Dirección');
 
-    // Fotos: puede venir del modelo o de los archivos cargados
-    const tieneFotos =
-      (prop.fotos && prop.fotos.length > 0) ||
-      (this.fotos && this.fotos.length > 0) ||
-      (this.fotosPreview && this.fotosPreview.length > 0);
-
+    // Validar fotos totales
+    const tieneFotos = this.totalFotos > 0;
     if (!tieneFotos) errores.push('Al menos una foto');
 
     return errores;
@@ -293,10 +356,9 @@ export class PropiedadesMenuModalComponent implements OnInit {
   private ValidarCamposCasa(prop: Propiedad): string[] {
     const errores: string[] = [];
 
-    // Habitaciones, Cocheras, Baños → enteros positivos
     const camposEnteros = [
       { campo: 'Habitaciones', valor: prop.habitaciones },
-      { campo: 'Baños', valor: prop.sanitario }
+      { campo: 'Baños', valor: prop.sanitarios }
     ];
 
     camposEnteros.forEach(c => {
@@ -313,14 +375,12 @@ export class PropiedadesMenuModalComponent implements OnInit {
       }
     }
 
-    // Antigüedad → entero (años)
     if (prop.antiguedad === undefined || prop.antiguedad === null) {
       errores.push('Antigüedad');
     } else if (!Number.isInteger(Number(prop.antiguedad)) || Number(prop.antiguedad) < 0) {
       errores.push('Antigüedad debe ser un número entero válido');
     }
 
-    // Superficie Construida y Terreno → decimales positivos
     const camposDecimales = [
       { campo: 'Superficie Construida (m²)', valor: prop.superficieConstruida },
       { campo: 'Superficie del Terreno (m²)', valor: prop.superficieTerreno }
@@ -340,7 +400,6 @@ export class PropiedadesMenuModalComponent implements OnInit {
   private ValidarCamposTerreno(prop: Propiedad): string[] {
     const errores: string[] = [];
 
-    // Superficie Construida y Terreno → decimales positivos
     const camposDecimales = [
       { campo: 'Superficie del Terreno (m²)', valor: prop.superficieTerreno }
     ];
@@ -359,7 +418,6 @@ export class PropiedadesMenuModalComponent implements OnInit {
   private ValidarCamposVehiculo(prop: Propiedad): string[] {
     const errores: string[] = [];
 
-    // Marca, modelo y patente → obligatorios y texto válido
     const camposTexto = [
       { campo: 'Marca', valor: prop.marca },
       { campo: 'Modelo', valor: prop.modelo },
@@ -372,7 +430,6 @@ export class PropiedadesMenuModalComponent implements OnInit {
       }
     });
 
-    // Fabricación y Kilometraje → deben ser números positivos
     const camposNumericos = [
       { campo: 'Año de Fabricación', valor: prop.fabricacion },
       { campo: 'Kilometraje', valor: prop.kilometraje }
@@ -386,7 +443,6 @@ export class PropiedadesMenuModalComponent implements OnInit {
       }
     });
 
-    // Validar que el año de fabricación tenga un rango razonable
     const anioActual = new Date().getFullYear();
     if (
       prop.fabricacion &&
@@ -401,14 +457,12 @@ export class PropiedadesMenuModalComponent implements OnInit {
   private ValidarCamposAlquiler(prop: Propiedad): string[] {
     const errores: string[] = [];
 
-    // Superficie cubierta → número decimal positivo
     if (prop.superficieConstruida === undefined || prop.superficieConstruida === null) {
       errores.push('Superficie cubierta (m²) es obligatoria');
     } else if (isNaN(Number(prop.superficieConstruida)) || Number(prop.superficieConstruida) < 0) {
       errores.push('Superficie cubierta (m²) debe ser un número válido');
     }
 
-    // Habitaciones y Sanitarios → números enteros positivos
     const camposEnteros = [
       { campo: 'Habitaciones', valor: prop.habitaciones },
       { campo: 'Sanitarios', valor: prop.sanitarios }
@@ -422,7 +476,6 @@ export class PropiedadesMenuModalComponent implements OnInit {
       }
     });
 
-    // Servicios incluidos → texto obligatorio
     if (!prop.serviciosIncluidos || prop.serviciosIncluidos.trim() === '') {
       errores.push('Servicios incluidos es obligatorio');
     }
@@ -463,21 +516,26 @@ export class PropiedadesMenuModalComponent implements OnInit {
 
     this.mensajeError = '';
     this.mensajeExito = '';
-
     this.fotos = [];
     this.fotosPreview = [];
+    this.fotosOriginales = [];
   }
 
   private PrepararPropiedad(propiedad: Propiedad, fotos: FotoPropiedad[]) {
     const formData = new FormData();
+
+    if (propiedad.id && propiedad.id > 0) {
+      formData.append('id', propiedad.id.toString());
+    }
 
     formData.append('titulo', propiedad.titulo);
     formData.append('subtitulo', propiedad.subtitulo);
     formData.append('tipoId', propiedad.tipoId.toString());
     formData.append('descripcion', propiedad.descripcion);
     formData.append('idBarrio', propiedad.idBarrio.toString());
-    formData.append('ciudad', propiedad.ciudad); 
-    formData.append('direccionMaps', propiedad.direccion); 
+    formData.append('ciudad', propiedad.ciudad);
+    formData.append('direccionMaps', propiedad.direccion);
+    formData.append('esDestacada', propiedad.esDestacada.toString());
 
     propiedad.terreno = propiedad.superficieTerreno?.toString();
     propiedad.construida = propiedad.superficieConstruida?.toString();
@@ -515,31 +573,41 @@ export class PropiedadesMenuModalComponent implements OnInit {
       ordenVisualizacion: i,
       esPrincipal: (f as any).esPrincipal || false,
     }));
-    formData.append('fotos', JSON.stringify(fotosDTO));  // esto va a [FromForm] string fotos
+    formData.append('fotos', JSON.stringify(fotosDTO));
 
     fotos.forEach(foto => {
       if ((foto as any).file instanceof File) {
-        formData.append('archivos', (foto as any).file, (foto as any).file.name); // esto va a [FromForm] List<IFormFile> archivos
+        formData.append('archivos', (foto as any).file, (foto as any).file.name);
       }
     });
 
     return formData;
   }
 
-
   private GuardarPropiedad(propiedad: Propiedad) {
-    const formData = this.PrepararPropiedad(propiedad, this.fotos);
-    console.log(formData);
-    this.propiedadesService.guardarPropiedad(formData).subscribe({
-      next: () => {
-        this.mensajeExito = 'Propiedad guardada correctamente!';
-        this.toastExito?.nativeElement.scrollIntoView({ behavior: 'smooth' });
-
-        setTimeout(() => this.LimpiarPropiedad(), 2000);
-      },
-      error: (err) => console.error('Error guardando propiedad', err)
-    });
+    const todasLasFotos = [
+      ...(propiedad.fotos || []),  // Fotos que ya estaban guardadas
+      ...this.fotos                // Fotos nuevas
+    ];
+    const formData = this.PrepararPropiedad(propiedad, todasLasFotos);
+    
+    if (propiedad.id > 0) {
+      this.propiedadesService.actualizarPropiedad(formData).subscribe({
+        next: () => {
+          this.mensajeExito = 'Propiedad actualizada correctamente!';
+          setTimeout(() => this.LimpiarPropiedad(), 2000);
+        },
+        error: (err) => console.error('Error guardando propiedad', err)
+      });
+    } else {
+      this.propiedadesService.guardarPropiedad(formData).subscribe({
+        next: () => {
+          this.mensajeExito = 'Propiedad guardada correctamente!';
+          setTimeout(() => this.LimpiarPropiedad(), 2000);
+        },
+        error: (err) => console.error('Error guardando propiedad', err)
+      });
+    }
   }
   //#endregion
-
 }

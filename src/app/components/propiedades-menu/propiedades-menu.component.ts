@@ -19,6 +19,7 @@ export class PropiedadesMenuComponent implements OnInit, AfterViewInit {
   cargando = true;
   modalAbierta = false; // controla si el modal se muestra o no
   propiedadSeleccionada: Propiedad = new Propiedad();
+  esEdicion = false;
 
   constructor(library: FaIconLibrary, private el: ElementRef, private propiedadesService: PropiedadesService) {
     library.addIcons(faPen, faTrash, faHome);
@@ -48,12 +49,14 @@ export class PropiedadesMenuComponent implements OnInit, AfterViewInit {
   AbrirModalNueva() {
     this.modalAbierta = true;
     this.propiedadSeleccionada = new Propiedad();
+    this.esEdicion = false;
   }
 
-  AbrirModalEditar(propiedad: Propiedad) {
-    this.propiedadSeleccionada = new Propiedad(propiedad);
-    this.modalAbierta = true;
-  }
+  AbrirModalEditar(propiedad: Propiedad): void {
+  this.propiedadSeleccionada = JSON.parse(JSON.stringify(propiedad)); //  Copia profunda!
+  this.esEdicion = true;
+  this.modalAbierta = true;
+}
 
   GuardarPropiedad(prop: Propiedad) {
     if (this.propiedadSeleccionada) {

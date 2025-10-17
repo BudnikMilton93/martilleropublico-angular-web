@@ -47,12 +47,11 @@ export class Propiedad {
 
   //#region Getters "universales"
   get imagenes(): string[] {
-    if (!this.fotos) return [];
-    return this.fotos
-      .map(f => f.url)        // tomar URL o base64
-      .filter(Boolean) as string[]; // eliminar undefined o null
-  }
-
+  if (!this.fotos) return [];
+  return this.fotos
+    .map(f => f.rutaArchivo)   // tomar la URL directamente
+    .filter(Boolean) as string[]; // eliminar undefined o null
+}
   get ubicacion(): string {
     return `${this.direccion || ''} ${this.barrioCompleto || ''}, ${this.ciudad} - ${this.provincia}`;
   }

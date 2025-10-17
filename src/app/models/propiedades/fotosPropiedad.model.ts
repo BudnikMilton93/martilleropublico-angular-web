@@ -1,6 +1,6 @@
 export class FotoPropiedad {
  id?: number;
-  url?: string; // Ruta completa o relativa al backend
+  rutaArchivo?: string; // Ruta completa o relativa al backend
   descripcion?: string;
   esPrincipal?: boolean;
   ordenVisualizacion?: number;
@@ -10,4 +10,7 @@ export class FotoPropiedad {
     Object.assign(this, init);
   }
 
+   get url() {
+    return this.rutaArchivo; // Para mantener compatibilidad con tu getter
+  }
 }

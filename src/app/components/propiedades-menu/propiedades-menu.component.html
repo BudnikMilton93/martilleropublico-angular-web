@@ -37,8 +37,7 @@
                         {{ propiedad.descripcion }}
                     </p>
 
-                    <!-- Imagen temporal de referencia por defecto -->
-                    <img src="assets\images\propiedades\venta-ChosMalal-elCanalito\01.jpg" alt="{{ propiedad.titulo }}"
+                    <img *ngIf="propiedad.fotos.length > 0" [src]="propiedad.fotos[0].rutaArchivo" alt="{{ propiedad.titulo }}"
                         class="w-32 h-32 object-cover rounded-lg ml-4 flex-shrink-0">
                 </div>
 
@@ -68,5 +67,6 @@
   *ngIf="modalAbierta"
   [propiedadSeleccionada]="propiedadSeleccionada"
   (cerrar)="modalAbierta = false"
+  [esEdicion]="esEdicion"
   (guardar)="GuardarPropiedad($event)">
 </app-propiedades-menu-modal>

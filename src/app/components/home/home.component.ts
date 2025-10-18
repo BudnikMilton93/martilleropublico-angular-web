@@ -93,6 +93,21 @@ export class HomeComponent implements AfterViewInit, OnInit {
   showCalculadora = false;
   mostrarBotonFlotante = true;
   cargando = true;
+
+  getResumen(propiedad: any): string {
+  switch (propiedad.tipoId) {
+    case 1:
+      return `Superficie construida y del terreno: ${propiedad.superficieResumen ?? ''}`;
+    case 2:
+      return `Superficie total: ${propiedad.superficieResumen ?? ''}`;
+    case 3:
+      return propiedad.vehiculoResumen ?? '';
+    case 4:
+      return propiedad.alquilerResumen ?? '';
+    default:
+      return '';
+  }
+}
   //#endregion
 
   //#region Procedimientos
@@ -189,7 +204,10 @@ export class HomeComponent implements AfterViewInit, OnInit {
     this.cargando = true;
     this.propiedadesService.getPropiedades().subscribe({
       next: (data) => {
-        this.propiedades = data;
+        this.propiedades = data
+          .filter(p => p.esDestacada) // solo destacadas
+          .sort((a, b) => new Date(b.fechaAlta).getTime() - new Date(a.fechaAlta).getTime()) // orden descendente
+          .slice(0, 3); // solo las 3 últimas
         this.cargando = false;
       },
       error: (err) => {
@@ -198,7 +216,7 @@ export class HomeComponent implements AfterViewInit, OnInit {
       }
     });
   }
-  
+
   AbrirCalculadora() { this.showCalculadora = true; }
 
   CerrarCalculadora() { this.showCalculadora = false; }

@@ -4,7 +4,7 @@
 
         <!-- Título -->
         <div class="relative mb-12 text-center">
-            <h2 class="text-3xl md:text-4xl font-bold text-[#333] relative inline-block">
+            <h2 class="text-3xl md:text-4xl font-bold text-[#545353] relative inline-block">
                 Creación de Propiedades
                 <span class="block w-16 h-1 bg-gray-600-600 mx-auto mt-2 rounded-full"></span>
             </h2>
@@ -53,6 +53,7 @@
 
                     <!-- Eliminar -->
                     <button
+                        (click)="eliminarPropiedad(propiedad.id)"
                         class="flex items-center justify-center gap-2 bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-800 transition-colors duration-200 hover:scale-105">
                         <fa-icon [icon]="['fas', 'trash']" class="text-white"></fa-icon>
                         <span>Eliminar</span>
@@ -68,5 +69,13 @@
   [propiedadSeleccionada]="propiedadSeleccionada"
   (cerrar)="modalAbierta = false"
   [esEdicion]="esEdicion"
-  (guardar)="GuardarPropiedad($event)">
+  (guardar)="onGuardarDesdeModal($event)">
 </app-propiedades-menu-modal>
+
+<app-toast
+  [mensaje]="mensajeToast"
+  [tipo]="tipoToast"
+  [visible]="toastVisible"
+  (aceptar)="eliminarPropiedadConfirmada()"
+  (cancelar)="cancelarEliminacion()">
+</app-toast>

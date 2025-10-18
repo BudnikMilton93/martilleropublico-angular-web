@@ -35,4 +35,8 @@ export class PropiedadesService {
     return this.api.postFormData(`${this.endpoint}/actualizarPropiedad`, formData);
   }
 
+  eliminarPropiedad(id: number): Observable<any> {
+    return this.api.delete(`${this.endpoint}/eliminarPropiedad/${id}`);
+  }
+
 }

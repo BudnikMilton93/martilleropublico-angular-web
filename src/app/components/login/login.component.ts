@@ -1,8 +1,9 @@
-import { Component, inject } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth/auth.service';
+import { animateOnScroll } from '../../shared/utils/animations';
 
 @Component({
   selector: 'app-login',
@@ -13,7 +14,7 @@ import { AuthService } from '../../services/auth/auth.service';
 })
 
 
-export class LoginComponent {
+export class LoginComponent implements AfterViewInit{
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private router = inject(Router);
@@ -23,14 +24,20 @@ export class LoginComponent {
   errorMessage = '';
   welcomeMessage = ''; // <-- variable para mostrar nombre y apellido
 
-  constructor() {
+  constructor(private el: ElementRef) {
     // Creamos el formulario reactivo
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]]
     });
   }
-
+  ngAfterViewInit(): void {
+    try {
+      this.ActivarAnimacion();
+    } catch (error) {
+      throw error;
+    }
+  }
 
   onSubmit() {
     if (this.loginForm.invalid) return;
@@ -68,5 +75,10 @@ export class LoginComponent {
         this.loginForm.enable();
       }
     });
+  }
+
+  ActivarAnimacion() {
+    const section = this.el.nativeElement.querySelector('#login-section');
+    animateOnScroll(section);
   }
 }

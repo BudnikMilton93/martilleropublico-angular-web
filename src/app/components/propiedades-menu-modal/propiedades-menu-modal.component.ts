@@ -21,9 +21,8 @@ export class PropiedadesMenuModalComponent implements OnInit, OnChanges {
   @Input() propiedadSeleccionada!: Propiedad;
   @Input() esEdicion = false;
   @Output() cerrar = new EventEmitter<void>();
-  @Output() guardar = new EventEmitter<Propiedad>();
+  @Output() guardar = new EventEmitter<boolean>();
   @ViewChild('toastError') toastError!: ElementRef;
-  @ViewChild('toastExito') toastExito!: ElementRef;
 
   // --- Propiedades ---
   public faSave = faSave;
@@ -105,8 +104,7 @@ export class PropiedadesMenuModalComponent implements OnInit, OnChanges {
   }
 
   onGuardar(): void {
-    try {
-      debugger;
+    try {      
       if (!this.SePuedeGuardar()) {
         return;
       } else {
@@ -594,7 +592,7 @@ export class PropiedadesMenuModalComponent implements OnInit, OnChanges {
     if (propiedad.id > 0) {
       this.propiedadesService.actualizarPropiedad(formData).subscribe({
         next: () => {
-          this.mensajeExito = 'Propiedad actualizada correctamente!';
+          this.guardar.emit(true);
           setTimeout(() => this.LimpiarPropiedad(), 2000);
         },
         error: (err) => console.error('Error guardando propiedad', err)
@@ -602,12 +600,13 @@ export class PropiedadesMenuModalComponent implements OnInit, OnChanges {
     } else {
       this.propiedadesService.guardarPropiedad(formData).subscribe({
         next: () => {
-          this.mensajeExito = 'Propiedad guardada correctamente!';
+          this.guardar.emit(false);
           setTimeout(() => this.LimpiarPropiedad(), 2000);
         },
         error: (err) => console.error('Error guardando propiedad', err)
       });
     }
+    
   }
   //#endregion
 }

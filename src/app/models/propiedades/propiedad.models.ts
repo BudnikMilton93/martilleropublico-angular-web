@@ -13,6 +13,7 @@ export class Propiedad {
   descripcion!: string;
   direccion!: string;
   direccionMaps!: string;
+  fechaAlta!: Date;
 
   //  Datos específicos de inmuebles
   superficieTerreno!: number;
@@ -20,6 +21,8 @@ export class Propiedad {
   construida?: string;
   superficieConstruida!: number;
   superficieResumen!: string;
+  vehiculoResumen!: string;
+  alquilerResumen!: string;
   antiguedad?: number;
   habitaciones?: number;
   sanitarios?: number;

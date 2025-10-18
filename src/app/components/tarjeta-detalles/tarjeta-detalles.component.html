@@ -11,9 +11,9 @@
     </button>
 
     <!-- Carrusel de imágenes -->
-    <div *ngIf="data.imagenes?.length" class="mb-4 relative">
-      <img [src]="data.imagenes[currentImage]" [alt]="data.titulo"
-        class="w-full h-auto object-contain rounded-lg transition-transform duration-500 ease-in-out transform hover:scale-105">
+    <div *ngIf="data.fotos?.length" class="mb-4 relative">
+      <img [src]="data.fotos[currentImage]?.rutaArchivo"
+      class="w-full h-auto object-contain rounded-lg transition-transform duration-500 ease-in-out transform hover:scale-105">
 
       <button (click)="ImagenAnterior()"
         class="absolute left-2 top-1/2 transform -translate-y-1/2 z-40 bg-white/70 w-10 h-10 rounded-full hover:bg-white/90 transition">
@@ -40,10 +40,7 @@
       Se encuentra en: {{ data.direccion }}.
     </p>
 
-    <!-- Superficie -->
-    <p *ngIf="data.superficieResumen" class="text-gray-700 mt-4">
-      Superficie construida y del terreno: {{ data.superficieResumen }}.
-    </p>
+   <p *ngIf="resumenTipo" class="text-gray-700 mt-4">{{ resumenTipo }}</p>
 
     <!-- Antiguedad -->
     <p *ngIf="data.antiguedad" class="text-gray-700 mt-4">

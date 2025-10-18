@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output  } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { CommonModule } from '@angular/common'
 import { faXmark, faChevronLeft, faChevronRight, faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons';
 import { faWhatsapp } from '@fortawesome/free-brands-svg-icons';
@@ -12,10 +12,10 @@ import { Propiedad } from '../../models/propiedades/propiedad.models';
   templateUrl: './tarjeta-detalles.component.html',
   styleUrl: './tarjeta-detalles.component.scss'
 })
-export class TarjetaDetallesComponent {
+export class TarjetaDetallesComponent implements OnChanges {
 
   constructor(library: FaIconLibrary) {
-  library.addIcons(faXmark, faChevronLeft, faChevronRight, faMapMarkerAlt, faWhatsapp);
+    library.addIcons(faXmark, faChevronLeft, faChevronRight, faMapMarkerAlt, faWhatsapp);
   }
 
   //#region Variables
@@ -25,6 +25,21 @@ export class TarjetaDetallesComponent {
   faMapMarkerAlt = faMapMarkerAlt;
   faWhatsapp = faWhatsapp;
   currentImage = 0;
+
+  get resumenTipo(): string {
+    switch (this.data?.tipoId) {
+      case 1:
+        return `Superficie construida y del terreno: ${this.data.superficieResumen ?? ''}`;
+      case 2:
+        return `Superficie total: ${this.data.superficieResumen ?? ''}`;
+      case 3:
+        return this.data.vehiculoResumen ?? '';
+      case 4:
+        return this.data.alquilerResumen ?? '';
+      default:
+        return '';
+    }
+  }
   //#endregion
 
 
@@ -33,16 +48,20 @@ export class TarjetaDetallesComponent {
   @Output() closeRequested = new EventEmitter<void>();
   //#endregion
 
+  ngOnChanges() {
+    this.currentImage = 0;
+  }
+
   //#region Procedimientos
   ImagenSiguiente() {
-    if (this.data?.imagenes.length) {
-      this.currentImage = (this.currentImage + 1) % this.data.imagenes.length;
+    if (this.data?.fotos.length) {
+      this.currentImage = (this.currentImage + 1) % this.data.fotos.length;
     }
   }
 
   ImagenAnterior() {
-    if (this.data?.imagenes.length) {
-      this.currentImage = (this.currentImage - 1 + this.data.imagenes.length) % this.data.imagenes.length;
+    if (this.data?.fotos.length) {
+      this.currentImage = (this.currentImage - 1 + this.data.fotos.length) % this.data.fotos.length;
     }
   }
 
@@ -51,5 +70,5 @@ export class TarjetaDetallesComponent {
   }
   //#endregion
 
-  
+
 }

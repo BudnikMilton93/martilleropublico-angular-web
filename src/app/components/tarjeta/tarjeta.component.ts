@@ -25,9 +25,32 @@ export class TarjetaComponent {
 }
   
   get subtitulo(): string {
+    const tipoId = this.data.tipoId;
     const ambientes = this.data.ambientesResumen || '';
     const superficie = this.data.superficieResumen || '';
-    return ambientes && superficie ? `${ambientes} - ${superficie}` : ambientes || superficie;
+    const vehiculo = this.data.vehiculoResumen || '';
+    const alquiler = this.data.alquilerResumen || '';
+
+    switch (tipoId) {
+      case 1: // Casa
+        return ambientes && superficie
+          ? `${ambientes} - ${superficie}`
+          : ambientes || superficie;
+
+      case 2: // Terreno
+        return superficie || 'Terreno disponible';
+
+      case 3: // Vehículo
+        return vehiculo || 'Vehículo sin detalles';
+
+      case 4: // Alquiler
+        return alquiler && superficie
+          ? `${alquiler} - ${superficie}`
+          : alquiler || superficie;
+
+      default:
+        return 'Propiedad';
+    }
   }
   //#endregion
 

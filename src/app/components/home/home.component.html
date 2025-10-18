@@ -77,8 +77,8 @@
       <div *ngFor="let propiedad of propiedades"
         class="bg-white rounded-lg shadow-lg hover:shadow-2xl overflow-hidden transform hover:scale-105 transition duration-300">
         <!-- Imagen principal -->
-        <img *ngIf="propiedad.fotos.length > 0" [src]="propiedad.fotos[0].url" [alt]="propiedad.titulo" loading="lazy"
-          class="w-full h-48 object-cover" />
+        <img *ngIf="propiedad.fotos.length > 0" [src]="propiedad.fotos[0].rutaArchivo" [alt]="propiedad.titulo"
+          loading="lazy" class="w-full h-48 object-cover" />
         <div *ngIf="propiedad.fotos.length === 0" class="w-full h-48 bg-gray-200 flex items-center justify-center">
           <span class="text-gray-500">Sin imagen</span>
         </div>
@@ -88,9 +88,7 @@
             {{ propiedad.titulo }}
           </h3>
           <p class="text-sm text-gray-600">
-            {{ propiedad.habitaciones || 'N/A' }} habitaciones ·
-            {{ propiedad.sanitarios || 'N/A' }} sanitarios ·
-            {{ propiedad.superficieResumen || 'N/A' }}
+            {{ getResumen(propiedad) || 'Sin información disponible' }}
           </p>
         </div>
       </div>

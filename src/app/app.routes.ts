@@ -8,6 +8,7 @@ import { LayoutComponent } from './components/layout/layout.component';
 import { LoginComponent } from './components/login/login.component';
 import { PropiedadesMenuComponent } from './components/propiedades-menu/propiedades-menu.component';
 
+
 export const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'servicios', component: ServiciosComponent },

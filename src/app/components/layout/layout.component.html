@@ -1,4 +1,3 @@
-
 <!-- HEADER -->
 <header [ngClass]="{ 'scrolled': isScrolled }"
   class="bg-[#545353] text-white shadow-md fixed top-0 w-full z-50 transition-all duration-300 ease-in-out">
@@ -19,10 +18,32 @@
         class="hover:text-[#E0A96D] transition">Propiedades</a>
       <a routerLink="/contacto" routerLinkActive="text-[#E0A96D]" [routerLinkActiveOptions]="{ exact: true }"
         class="hover:text-[#E0A96D] transition">Contacto</a>
-      <a routerLink="/login" routerLinkActive="text-[#E0A96D]" [routerLinkActiveOptions]="{ exact: true }"
-        class="hover:text-[#E0A96D] transition">Login</a>
-      <a routerLink="/menu" routerLinkActive="text-[#E0A96D]" [routerLinkActiveOptions]="{ exact: true }"
-        class="hover:text-[#E0A96D] transition">Menú</a>
+
+      <!-- SOLO si el usuario está logueado -->
+      <a *ngIf="isLoggedIn" routerLink="/menu" routerLinkActive="text-[#E0A96D]"
+        [routerLinkActiveOptions]="{ exact: true }" class="hover:text-[#E0A96D] transition">Menú</a>
+
+      <!-- SOLO si NO está logueado -->
+      <a *ngIf="!isLoggedIn" routerLink="/login" routerLinkActive="text-[#E0A96D]"
+        [routerLinkActiveOptions]="{ exact: true }" class="hover:text-[#E0A96D] transition">Login</a>
+
+      <!-- Botón de Cerrar sesión -->
+      <div *ngIf="isLoggedIn" class="relative ml-4">
+        <button (click)="userMenuOpen = !userMenuOpen" class="flex items-center space-x-2 focus:outline-none">
+          <svg class="w-6 h-6 text-[#E0A96D]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
+            stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" y1="6" x2="21" y2="6" />
+            <line x1="3" y1="12" x2="21" y2="12" />
+            <line x1="3" y1="18" x2="21" y2="18" />
+          </svg>
+        </button>
+
+        <!-- Menú desplegable -->
+        <div *ngIf="userMenuOpen" class="absolute right-0 mt-2 w-48 bg-white text-black rounded shadow-lg z-50">
+          <div class="px-4 py-2 border-b border-gray-200">{{ usuarioNombre }}</div>
+          <button (click)="logout()" class="w-full text-left px-4 py-2 hover:bg-gray-200">Cerrar sesión</button>
+        </div>
+      </div>
     </nav>
 
     <!-- Menú móvil -->
@@ -45,6 +66,14 @@
       (click)="closeMenu()">Propiedades</a>
     <a routerLink="/contacto" class="block px-4 py-2 hover:bg-[#E0A96D] hover:text-[#545353]"
       (click)="closeMenu()">Contacto</a>
+
+    <!-- Opciones según login -->
+    <a *ngIf="isLoggedIn" routerLink="/menu" class="block px-4 py-2 hover:bg-[#E0A96D] hover:text-[#545353]"
+      (click)="closeMenu()">Menú</a>
+    <a *ngIf="!isLoggedIn" routerLink="/login" class="block px-4 py-2 hover:bg-[#E0A96D] hover:text-[#545353]"
+      (click)="closeMenu()">Login</a>
+    <button *ngIf="isLoggedIn" (click)="logout(); closeMenu()"
+      class="block w-full text-left px-4 py-2 hover:bg-[#E0A96D] hover:text-[#545353]">Cerrar sesión</button>
   </nav>
 </header>
 

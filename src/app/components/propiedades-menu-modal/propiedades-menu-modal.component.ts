@@ -23,6 +23,7 @@ export class PropiedadesMenuModalComponent implements OnInit, OnChanges {
   @Output() cerrar = new EventEmitter<void>();
   @Output() guardar = new EventEmitter<boolean>();
   @ViewChild('toastError') toastError!: ElementRef;
+  isLoading = false;
 
   // --- Propiedades ---
   public faSave = faSave;
@@ -41,7 +42,7 @@ export class PropiedadesMenuModalComponent implements OnInit, OnChanges {
   ciudadesConBarrios: CiudadConBarrios[] = [];
   barriosFiltrados: Barrio[] = [];
 
-  constructor(library: FaIconLibrary, private propiedadesService: PropiedadesService, private cdr: ChangeDetectorRef) { 
+  constructor(library: FaIconLibrary, private propiedadesService: PropiedadesService, private cdr: ChangeDetectorRef) {
     library.addIcons(faSave, faCancel);
   }
 
@@ -86,7 +87,7 @@ export class PropiedadesMenuModalComponent implements OnInit, OnChanges {
     if (changes['propiedadSeleccionada'] && this.propiedadSeleccionada) {
       // Guardar copia del estado original de las fotos
       this.GuardarEstadoOriginal();
-      
+
       // Limpiar fotos nuevas al abrir el modal
       this.fotos = [];
       this.fotosPreview = [];
@@ -104,7 +105,7 @@ export class PropiedadesMenuModalComponent implements OnInit, OnChanges {
   }
 
   onGuardar(): void {
-    try {      
+    try {
       if (!this.SePuedeGuardar()) {
         return;
       } else {
@@ -588,25 +589,34 @@ export class PropiedadesMenuModalComponent implements OnInit, OnChanges {
       ...this.fotos                // Fotos nuevas
     ];
     const formData = this.PrepararPropiedad(propiedad, todasLasFotos);
-    
+    this.isLoading = true;
+
     if (propiedad.id > 0) {
       this.propiedadesService.actualizarPropiedad(formData).subscribe({
         next: () => {
           this.guardar.emit(true);
+          this.isLoading = false;
           setTimeout(() => this.LimpiarPropiedad(), 2000);
         },
-        error: (err) => console.error('Error guardando propiedad', err)
+        error: (err) => {
+          this.isLoading = false;
+          this.mensajeError = 'Error al actualizar la propiedad';
+        }
       });
     } else {
       this.propiedadesService.guardarPropiedad(formData).subscribe({
         next: () => {
           this.guardar.emit(false);
+          this.isLoading = false;
           setTimeout(() => this.LimpiarPropiedad(), 2000);
         },
-        error: (err) => console.error('Error guardando propiedad', err)
+        error: (err) => {
+          this.isLoading = false;
+          this.mensajeError = 'Error al actualizar la propiedad';
+        }
       });
     }
-    
+
   }
   //#endregion
 }

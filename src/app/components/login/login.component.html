@@ -16,7 +16,7 @@
 
         <!-- Logo -->
         <div class="flex flex-col items-center mb-8">
-          <img src="assets/images/home/LOGO ZM.png" alt="Logo Martillero" class="w-36 h-28 object-contain mb-3">
+          <img src="assets/images/home/LOGO ZM  Login.png" alt="Logo Martillero" class="w-38 h-32 object-contain mb-3">
           <h1 class="text-xl font-bold">Martillero y Corredor Público</h1>
         </div>
 
@@ -45,11 +45,6 @@
             {{ isLoading ? 'Ingresando...' : 'Ingresar' }}
           </button>
         </form>
-
-        <!-- Mensaje de bienvenida -->
-        <div *ngIf="welcomeMessage" class="mt-4 text-center text-green-600 font-semibold">
-          {{ welcomeMessage }}
-        </div>
 
         <!-- Error -->
         <div *ngIf="errorMessage" class="mt-4 text-center text-red-400">

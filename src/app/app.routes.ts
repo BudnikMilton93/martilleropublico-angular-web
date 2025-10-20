@@ -7,6 +7,7 @@ import { ContactoComponent } from './components/contacto/contacto.component';
 import { LayoutComponent } from './components/layout/layout.component';
 import { LoginComponent } from './components/login/login.component';
 import { PropiedadesMenuComponent } from './components/propiedades-menu/propiedades-menu.component';
+import { authGuard } from './guards/auth.guard';
 
 
 export const routes: Routes = [
@@ -16,6 +17,10 @@ export const routes: Routes = [
   { path: 'contacto', component: ContactoComponent },
   { path: 'layout', component: LayoutComponent },
   { path: 'login', component: LoginComponent },
-  { path: 'menu', component: PropiedadesMenuComponent },
+  {
+    path: 'menu',
+    component: PropiedadesMenuComponent,
+    canActivate: [authGuard]
+  },
   { path: '**', redirectTo: '' }
 ];

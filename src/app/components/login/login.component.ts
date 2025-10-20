@@ -10,32 +10,30 @@ import { animateOnScroll } from '../../shared/utils/animations';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.scss'
+  styleUrls: ['./login.component.scss']
 })
-
-
-export class LoginComponent implements AfterViewInit{
+export class LoginComponent implements AfterViewInit {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private router = inject(Router);
+  private el = inject(ElementRef);
 
   loginForm: FormGroup;
   isLoading = false;
   errorMessage = '';
-  welcomeMessage = ''; // <-- variable para mostrar nombre y apellido
 
-  constructor(private el: ElementRef) {
-    // Creamos el formulario reactivo
+  constructor() {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]]
     });
   }
+
   ngAfterViewInit(): void {
     try {
       this.ActivarAnimacion();
     } catch (error) {
-      throw error;
+      console.error('Error en animación:', error);
     }
   }
 
@@ -44,34 +42,24 @@ export class LoginComponent implements AfterViewInit{
 
     this.isLoading = true;
     this.errorMessage = '';
+    this.loginForm.disable();
 
     const { email, password } = this.loginForm.value;
 
-    this.loginForm.disable();
-
-    //Llamamos al login
     this.authService.login(email, password).subscribe({
-      next: (res) => {
-        // Si login correcto, llamamos al endpoint perfil para obtener nombre y apellido
-        this.authService.perfil().subscribe({
-          next: (perfil) => {
-            this.isLoading = false;
-            this.welcomeMessage = `¡Bienvenido ${perfil.nombre} ${perfil.apellido}!`;
-            this.loginForm.enable();
-            // Si querés redirigir después de X segundos:
-            // setTimeout(() => this.router.navigate(['/home']), 2000);
-          },
-          error: (err) => {
-            this.isLoading = false;
-            this.errorMessage = 'Error al obtener perfil del usuario';
-            this.loginForm.enable();
-          }
-        });
-      },
-      error: (err) => {
+      next: (res: any) => {
+        // Guardamos token y usuario
+        localStorage.setItem('token', res.accessToken);
+        localStorage.setItem('perfil', JSON.stringify(res.user));
+        
         this.isLoading = false;
-        console.log(err)
+        this.loginForm.enable();
+        this.router.navigate(['/menu']);
+      },
+      error: (err: any) => {
+        console.error('Error en login:', err);
         this.errorMessage = err?.error?.message || 'Error al iniciar sesión';
+        this.isLoading = false;
         this.loginForm.enable();
       }
     });

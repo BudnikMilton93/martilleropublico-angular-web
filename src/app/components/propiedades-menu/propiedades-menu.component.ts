@@ -17,6 +17,7 @@ import { ToastComponent } from '../shared/toast/toast.component';
 })
 export class PropiedadesMenuComponent implements OnInit, AfterViewInit {
   propiedades: Propiedad[] = [];
+  isLoading = false;
   cargando = true;
   modalAbierta = false; // controla si el modal se muestra o no
   propiedadSeleccionada: Propiedad = new Propiedad();
@@ -91,7 +92,6 @@ export class PropiedadesMenuComponent implements OnInit, AfterViewInit {
 
 
   eliminarPropiedad(id: number) {
-    console.log('Intentando eliminar propiedad ID:', id);
     this.eliminarPropiedadIdTemp = id;
     this.mostrarMensaje('¿Deseas eliminar esta propiedad?', 'confirm');
   }
@@ -100,31 +100,30 @@ export class PropiedadesMenuComponent implements OnInit, AfterViewInit {
 
   eliminarPropiedadConfirmada() {
     if (this.eliminarPropiedadIdTemp === null) {
-      console.warn('No hay ID de propiedad para eliminar');
       return;
     }
 
     const idAEliminar = this.eliminarPropiedadIdTemp;
-    console.log('Iniciando eliminación de propiedad ID:', idAEliminar);
-    
+
     // PASO 1: Cerrar el toast de confirmación
     this.toastVisible = false;
     this.eliminarPropiedadIdTemp = null;
+    this.isLoading = true;
 
     setTimeout(() => {
       this.propiedadesService.eliminarPropiedad(idAEliminar).subscribe({
         next: () => {
-          console.log(' Propiedad eliminada del servidor');
+          this.isLoading = false;
           this.propiedades = this.propiedades.filter(p => p.id !== idAEliminar);
           this.mostrarMensaje('Propiedad eliminada correctamente', 'exito');
         },
         error: (error) => {
-          console.error(' Error al eliminar:', error);
+          this.isLoading = false;
           this.mostrarMensaje('Error al eliminar la propiedad', 'error');
         }
       });
     }, 200);
-    
+
   }
 
   cancelarEliminacion() {

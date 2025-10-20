@@ -2,19 +2,19 @@ import { Metrica } from '../../models/home/metricas.model';
 
 export const METRICAS_MOCK: Metrica[] = [
   {
-    valor: 50,
+    valor: 15,
     titulo: 'Ventas Concretadas',
     icono: 'assets/images/home/referencias/casa.png',
     animacion: true,
     info: [
-      'Más de 50 operaciones cerradas con clientes satisfechos.',
+      'Más de 15 operaciones cerradas con clientes satisfechos.',
       'Procesos de compraventa ágiles y transparentes.',
       'Acompañamiento integral durante toda la operación.',
       'Red de contactos que facilita la concreción de negocios.'
     ]
   },
   {
-    valor: 30,
+    valor: 10,
     titulo: 'Tasaciones',
     icono: 'assets/images/home/referencias/tasacion.png',
     animacion: true,
@@ -32,6 +32,7 @@ export const METRICAS_MOCK: Metrica[] = [
     animacion: true,
     info: [
       'Nuestros servicios llegan a las localidades de:',
+      'Chos Malal',
       'Huingan Có',
       'Taquimilán',
       'Las Ovejas',

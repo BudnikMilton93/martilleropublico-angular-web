@@ -73,7 +73,14 @@
       Propiedades Destacadas
     </h2>
 
-    <div class="grid gap-8 md:grid-cols-3">
+    <!-- Loader -->
+    <div *ngIf="cargando" class="flex flex-col items-center justify-center h-48">
+      <div class="w-10 h-10 border-4 border-gray-300 border-t-[#545353] rounded-full animate-spin"></div>
+      <span class="mt-3 text-[#545353] font-medium">Cargando propiedades...</span>
+    </div>
+
+    <!-- Grilla de propiedades -->
+    <div *ngIf="!cargando" class="grid gap-8 md:grid-cols-3">
       <div *ngFor="let propiedad of propiedades"
         class="bg-white rounded-lg shadow-lg hover:shadow-2xl overflow-hidden transform hover:scale-105 transition duration-300">
         <!-- Imagen principal -->

@@ -135,6 +135,7 @@ export class PropiedadesMenuComponent implements OnInit, AfterViewInit {
   ObtenerPropiedades() {
     this.propiedadesService.getPropiedades().subscribe({
       next: (data) => {
+        console.log(data);
         this.propiedades = data;
         this.cargando = false;
       },

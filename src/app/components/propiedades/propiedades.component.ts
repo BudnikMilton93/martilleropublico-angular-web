@@ -1,4 +1,4 @@
-import { AfterViewInit, Component,ElementRef, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common'
 import { TarjetaComponent } from '../tarjeta/tarjeta.component';
 import { TarjetaDetallesComponent } from '../tarjeta-detalles/tarjeta-detalles.component';
@@ -17,7 +17,7 @@ import { PropiedadesService } from '../../services/propiedades/propiedades.servi
   styleUrl: './propiedades.component.scss'
 })
 export class PropiedadesComponent implements AfterViewInit, OnInit {
-  
+
   constructor(private el: ElementRef, library: FaIconLibrary, private propiedadesService: PropiedadesService) {
     library.addIcons(faCalculator);
   }
@@ -33,15 +33,16 @@ export class PropiedadesComponent implements AfterViewInit, OnInit {
 
   ngOnInit(): void {
     try {
-       this.CargarPropiedades();
+      this.CargarPropiedades();
     } catch (error) {
       throw error;
     }
   }
   //#endregion
-  
+
   //#region Variables
   propiedades: Propiedad[] = [];
+  cargando: boolean = true;
   propiedadSeleccionada: Propiedad | null = null;
 
   faCalculator = faCalculator;
@@ -50,20 +51,25 @@ export class PropiedadesComponent implements AfterViewInit, OnInit {
 
   //#region Procedimientos
   OpenModal(propiedad: Propiedad) {
-  this.propiedadSeleccionada = null; // fuerza reset del ngIf
-  setTimeout(() => {
-    this.propiedadSeleccionada = propiedad ; // copia nueva referencia
-  });
-}
+    this.propiedadSeleccionada = null; // fuerza reset del ngIf
+    setTimeout(() => {
+      this.propiedadSeleccionada = propiedad; // copia nueva referencia
+    });
+  }
 
   CargarPropiedades() {
-  this.propiedadesService.getPropiedades().subscribe({
-    next: (data) => {
-      this.propiedades = data;
-    },
-    error: (err) => console.error('Error cargando propiedades', err)
-  });
-}
+    this.cargando = true;
+    this.propiedadesService.getPropiedades().subscribe({
+      next: (data) => {
+        this.propiedades = data;
+        this.cargando = false;
+      },
+       error: (err) => {
+        console.error('Error al cargar propiedades:', err);
+        this.cargando = false;
+      }
+    });
+  }
 
   ActivarAnimacion() {
     const section = this.el.nativeElement.querySelector('#propiedades-section');
@@ -71,5 +77,5 @@ export class PropiedadesComponent implements AfterViewInit, OnInit {
   }
 
   //#endregion
-  
+
 }

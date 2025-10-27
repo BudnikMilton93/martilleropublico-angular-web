@@ -1,4 +1,7 @@
-<section id="propiedades-section" class="bg-[#e0e2e6] relative pt-[4rem] opacity-0 transform -translate-x-10 transition-all duration-700 bg-cover bg-center">
+<section
+  id="propiedades-section"
+  class="bg-[#e0e2e6] relative pt-[4rem] opacity-0 transform -translate-x-10 transition-all duration-700 bg-cover bg-center"
+>
   <div class="relative container mx-auto px-4 py-12">
     <div class="relative mb-12">
       <h2 class="text-3xl md:text-4xl font-bold text-[#545353] text-center">
@@ -6,16 +9,31 @@
       </h2>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-      <app-tarjeta *ngFor="let propiedad of propiedades" 
-                   [data]="propiedad" 
-                   (detailRequested)="OpenModal($event)">
+    <!--  LOADER mientras se cargan las propiedades -->
+    <div *ngIf="cargando" class="flex flex-col items-center justify-center h-48">
+      <div class="w-10 h-10 border-4 border-gray-300 border-t-[#545353] rounded-full animate-spin"></div>
+      <span class="mt-3 text-[#545353] font-medium">Cargando propiedades...</span>
+    </div>
+
+    <!--  Grilla de tarjetas -->
+    <div *ngIf="!cargando && propiedades.length > 0" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <app-tarjeta
+        *ngFor="let propiedad of propiedades"
+        [data]="propiedad"
+        (detailRequested)="OpenModal($event)">
       </app-tarjeta>
+    </div>
+
+    <!--  Mensaje si no hay propiedades -->
+    <div *ngIf="!cargando && propiedades.length === 0" class="text-center text-gray-600 mt-6">
+      No hay propiedades disponibles en este momento.
     </div>
   </div>
 </section>
 
-<app-tarjeta-detalles *ngIf="propiedadSeleccionada" 
-                       [data]="propiedadSeleccionada"
-                       (closeRequested)="propiedadSeleccionada = null">
+<!--  Modal de detalles -->
+<app-tarjeta-detalles
+  *ngIf="propiedadSeleccionada"
+  [data]="propiedadSeleccionada"
+  (closeRequested)="propiedadSeleccionada = null">
 </app-tarjeta-detalles>

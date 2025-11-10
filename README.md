@@ -11,7 +11,7 @@ El frontend se comunica con la API REST .NET 8 desplegada en Azure y se publica 
 |------|---------|
 | 🌍 **Sitio en producción** | [https://www.zmpropiedades.com/](https://www.zmpropiedades.com/) *(CloudFront + SSL)* |
 | ⚙️ **API Backend (Azure)** | [https://martilleropublico-api-app.gentlecoast-0f9fc459.eastus.azurecontainerapps.io/api/](https://martilleropublico-api-app.gentlecoast-0f9fc459.eastus.azurecontainerapps.io/api/) |
-| 🧠 **Repositorio Backend** | [GitHub - MartilleroPublico.API](#) *(agregar link real)* |
+| 🧠 **Repositorio Backend** | [GitHub - MartilleroPublico.API](#) *(https://github.com/BudnikMilton93/martilleropublico-NET8-API.git)* |
 | 💾 **Repositorio Frontend** | [GitHub - MartilleroPublico.Front](#) *(este repo)* |
 
 ---
